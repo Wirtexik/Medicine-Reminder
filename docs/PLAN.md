@@ -17,35 +17,42 @@
 
 ## 1. Repozytorium i wdrożenie
 
-- [ ] `git init`, pierwszy commit (bez `.impeccable/mocks/`, `.impeccable/review/`, `.impeccable/config.local.json`), repo na GitHubie.
-- [ ] Projekt na Vercelu podpięty pod repo; domena `*.vercel.app`.
-- [ ] Zmienne środowiskowe: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (lokalnie w `.env.local`, na Vercelu w ustawieniach projektu).
+- [x] `git init`, pierwszy commit (bez `.impeccable/mocks/`, `.impeccable/review/`, `.impeccable/config.local.json`), repo na GitHubie.
+- [x] Projekt na Vercelu podpięty pod repo; domena `*.vercel.app`.
+- [x] Zmienne środowiskowe na Vercelu (projekt Supabase połączony).
+- [x] Te same zmienne lokalnie w `.env.local`: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 
 ## 2. Baza danych Supabase ⟵ 1
 
 Migracje w `supabase/migrations/` (Supabase CLI), zgodnie z PROJEKT.md §6.
 
-- [ ] Rozszerzenia: `btree_gist` (wymagane przez `EXCLUDE` na okresach), `pg_cron`, `pg_net`.
-- [ ] Tabele: `profiles`, `time_slots`, `medications`, `med_packages`, `dosing_periods`, `period_doses`, `period_dose_parts`, `intake_log`, `stock_movements`, `push_subscriptions`, `notification_log`.
-- [ ] Ograniczenia: brak nakładania się okresów (`EXCLUDE USING gist`), `UNIQUE (period_dose_id, date)` w `intake_log`, `UNIQUE (kind, ref_id, date)` w `notification_log`, `quantity > 0`.
-- [ ] Trigger: `stock_movements` → przeliczenie `med_packages.stock_cached`.
-- [ ] Trigger na `auth.users`: utworzenie `profiles` i 7 domyślnych pór dnia (lista w `src/lib/data/demo.ts` → `DEFAULT_SLOTS`).
-- [ ] **RLS na każdej tabeli**: `user_id = auth.uid()` bezpośrednio albo przez złączenie z `medications`.
-- [ ] Funkcje RPC (`security invoker`, jedna transakcja):
+> Wgrane 2026-11-12 przez SQL Editor (`20261112000000_init.sql`), sprawdzone przez REST: 11 tabel i RPC istnieją, rola `anon` nie ma dostępu.
+> **Historia migracji CLI jest pusta.** Przed pierwszym `npm run db:push` (po `supabase login` + `supabase link`) uruchomić `npx supabase migration repair --status applied 20261112000000`, inaczej CLI spróbuje wgrać ją ponownie.
+> Typy w `database.types.ts` są napisane ręcznie; po podpięciu CLI nadpisać je przez `npm run db:types`.
+> Dodatkowo: triggery spójności (pora i opakowanie dawki należą do właściciela leku), strażnik daty także jako trigger na `intake_log`, a dawki z historią przyjęć są chronione przed usunięciem (`ON DELETE RESTRICT`).
+
+- [x] Rozszerzenia: `btree_gist` (wymagane przez `EXCLUDE` na okresach), `pg_cron`, `pg_net`.
+- [x] Tabele: `profiles`, `time_slots`, `medications`, `med_packages`, `dosing_periods`, `period_doses`, `period_dose_parts`, `intake_log`, `stock_movements`, `push_subscriptions`, `notification_log`.
+- [x] Ograniczenia: brak nakładania się okresów (`EXCLUDE USING gist`), `UNIQUE (period_dose_id, date)` w `intake_log`, `UNIQUE (kind, ref_id, date)` w `notification_log`, `quantity > 0`.
+- [x] Trigger: `stock_movements` → przeliczenie `med_packages.stock_cached`.
+- [x] Trigger na `auth.users`: utworzenie `profiles` i 7 domyślnych pór dnia (lista w `src/lib/data/demo.ts` → `DEFAULT_SLOTS`).
+- [x] **RLS na każdej tabeli**: `user_id = auth.uid()` bezpośrednio albo przez złączenie z `medications`.
+- [x] Funkcje RPC (`security invoker`, jedna transakcja):
   - `take_dose(dose_id, date)` / `untake_dose(dose_id, date)`: wpis lub usunięcie w `intake_log` plus ruchy stanu;
   - `take_slot(dose_ids[], date)`;
   - `reorder_doses(dose_ids[])`;
   - `start_new_period(medication_id, from_date)`: zamknięcie bieżącego okresu na `from−1` i kopia dawek do nowego okresu.
-- [ ] Strażnik daty w funkcjach: odrzucić `date < (now() at time zone 'Europe/Warsaw')::date − 1` i daty przyszłe.
-- [ ] Wygenerować typy: `supabase gen types typescript` → `src/lib/data/database.types.ts`.
+- [x] Strażnik daty w funkcjach: odrzucić `date < (now() at time zone 'Europe/Warsaw')::date − 1` i daty przyszłe.
+- [x] Wygenerować typy: `supabase gen types typescript` → `src/lib/data/database.types.ts`.
 
 ## 3. Logowanie ⟵ 2
 
-- [ ] `@supabase/ssr`: klient przeglądarkowy i serwerowy.
-- [ ] `src/proxy.ts` (w Next 16 Middleware nazywa się Proxy): odświeżanie sesji i przekierowanie niezalogowanych na `/logowanie`. To tylko optymistyczny filtr; właściwą ochroną jest RLS.
-- [ ] Ekran `/logowanie`: pole „Nazwa użytkownika” + hasło; `jan` → `jan@leki.local`. Jasny komunikat przy złym haśle. Bez rejestracji.
-- [ ] Publiczna rejestracja wyłączona w panelu Supabase; konta zakładane ręcznie (Add user, Auto Confirm).
-- [ ] Wylogowanie i zmiana hasła w Ustawieniach.
+- [x] `@supabase/ssr`: klient przeglądarkowy i serwerowy (`src/lib/supabase/`).
+- [x] `src/proxy.ts` (w Next 16 Middleware nazywa się Proxy): odświeżanie sesji i przekierowanie niezalogowanych na `/logowanie`. To tylko optymistyczny filtr; właściwą ochroną jest RLS.
+- [x] Ekran `/logowanie`: pole „Nazwa użytkownika” + hasło; `jan` → `jan@leki.local`. Jasny komunikat przy złym haśle. Bez rejestracji.
+- [x] Publiczna rejestracja wyłączona w panelu Supabase (Authentication → Sign In / Providers → „Allow new users to sign up”); konta zakładane ręcznie (Add user, Auto Confirm). Sprawdzone 2026-11-12: `disable_signup: true`.
+- [x] Wylogowanie i zmiana hasła w Ustawieniach (zmiana wymaga obecnego hasła, nowe min. 8 znaków).
+- [x] Sprawdzić logowanie na prawdziwym koncie (lokalnie i na Vercelu).
 
 ## 4. Warstwa danych na Supabase ⟵ 2, 3
 
