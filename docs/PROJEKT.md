@@ -64,7 +64,7 @@ Prywatna aplikacja mobilna (PWA na **iPhonie**, bez wersji desktopowej) do:
 | Backend | Supabase: Postgres, Auth (e-mail/hasło), RLS |
 | PWA | manifest + service worker (wymagane na iOS do powiadomień push) |
 | Push | Web Push (VAPID), biblioteka `web-push` w Supabase Edge Function |
-| Harmonogram | Supabase `pg_cron` co 15 min wywołuje Edge Function `notify` |
+| Harmonogram | Supabase `pg_cron` co 5 min wywołuje Edge Function `notify` |
 | Strefa czasowa | `Europe/Warsaw` (date-fns-tz) |
 
 **Logowanie nazwą użytkownika:** Supabase Auth wymaga e-maila. Wpisujesz `jan`, a aplikacja loguje jako `jan@leki.local`. Konto zakładasz w panelu Supabase (Add user, Auto Confirm). Rejestracja publiczna jest wyłączona.
@@ -212,7 +212,7 @@ notification_log    id, user_id, kind (slot_missed|exact_time|low_stock),
 
 ## 7. Powiadomienia
 
-`pg_cron` co 15 min wywołuje Edge Function `notify`, która dla każdego użytkownika (czas `Europe/Warsaw`):
+`pg_cron` co 5 min wywołuje Edge Function `notify`, która dla każdego użytkownika (czas `Europe/Warsaw`):
 
 | Typ | Warunek | Treść |
 |---|---|---|

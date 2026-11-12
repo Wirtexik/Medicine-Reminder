@@ -1,6 +1,6 @@
 -- Leki: powiadomienia push (docs/PLAN.md §8, PROJEKT.md §7).
 --
--- Przepływ: pg_cron co 15 min → public.invoke_notify() → pg_net → Edge Function `notify`
+-- Przepływ: pg_cron co 5 min → public.invoke_notify() → pg_net → Edge Function `notify`
 -- → public.notification_candidates() → web-push → notification_log.
 --
 -- Przed pierwszym uruchomieniem zapisać w Vault (SQL Editor), wartości bez cudzysłowów w repo:
@@ -222,5 +222,5 @@ revoke execute on function public.notification_candidates(timestamptz) from publ
 grant execute on function public.notification_candidates(timestamptz) to service_role;
 revoke execute on function public.invoke_notify() from public, anon, authenticated;
 
--- Co 15 minut (cron.schedule z tą samą nazwą nadpisuje harmonogram).
-select cron.schedule('leki-notify', '*/15 * * * *', 'select public.invoke_notify()');
+-- Co 5 minut (cron.schedule z tą samą nazwą nadpisuje harmonogram).
+select cron.schedule('leki-notify', '*/5 * * * *', 'select public.invoke_notify()');

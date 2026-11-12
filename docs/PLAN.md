@@ -128,31 +128,37 @@ Migracje w `supabase/migrations/` (Supabase CLI), zgodnie z PROJEKT.md §6.
 > `slot_missed` pomija wyłączone pory i pory bez `reminder_time`; `exact_time` dotyczy każdej dawki z godziną. `low_stock` od 9:00 (jeśli cron o 9:00 nie zadziała, wyśle przy następnym wywołaniu tego dnia).
 > Deduplikacja: wpis w `notification_log` jest wstawiany **przed** wysyłką (dwa równoległe wywołania nie wyślą dwa razy). Jeśli nie doręczono na żadne urządzenie, wpis jest usuwany i pozycja wraca przy następnym wywołaniu. `low_stock_notified_at` ustawiane tylko po doręczeniu.
 > Subskrypcja przez RPC `register_push_subscription` (`security definer`): endpoint należy do urządzenia, więc po zalogowaniu innej osoby na tym telefonie przechodzi na nią. Przy starcie aplikacji `PushSync` rejestruje SW i odnawia subskrypcję, jeśli użytkownik ją włączył (flaga `leki-push` w `localStorage`).
-> Wywołanie: `pg_cron` (`leki-notify`, `*/15 * * * *`) → `invoke_notify()` → `pg_net` z nagłówkiem `x-notify-secret`. Adres i sekret w **Vault** (`notify_url`, `notify_secret`), nie w repo. Funkcja ma `verify_jwt = false` i sama sprawdza sekret.
+> Wywołanie: `pg_cron` (`leki-notify`, `*/5 * * * *`) → `invoke_notify()` → `pg_net` z nagłówkiem `x-notify-secret`. Adres i sekret w **Vault** (`notify_url`, `notify_secret`), nie w repo. Funkcja ma `verify_jwt = false` i sama sprawdza sekret.
 > **Wdrożenie (ręcznie):**
 > 1. `npx supabase secrets set --env-file <plik> --project-ref awbzxrjgkvhjxfstjcsz` z `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `NOTIFY_SECRET`.
 > 2. `npx supabase functions deploy notify --project-ref awbzxrjgkvhjxfstjcsz --use-api --no-verify-jwt`.
 > 3. Migrację `20261112140000_notifications.sql` wgrać w SQL Editor (potem przy podpinaniu CLI `migration repair --status applied 20261112140000`), następnie `vault.create_secret(...)` dla `notify_url` i `notify_secret`.
 > 4. `NEXT_PUBLIC_VAPID_PUBLIC_KEY` na Vercelu (lokalnie już w `.env.local`) i ponowne wdrożenie.
 > **Nie sprawdzone na urządzeniu:** typy, lint i `next build` przechodzą.
-> Znane ograniczenia: wylogowanie nie usuwa subskrypcji urządzenia (do czasu zalogowania kogoś innego przychodzą powiadomienia poprzedniego konta); godziny po 23:45 trafiają w kolejny dzień i przepadają (cron co 15 min).
+> Znane ograniczenia: wylogowanie nie usuwa subskrypcji urządzenia (do czasu zalogowania kogoś innego przychodzą powiadomienia poprzedniego konta); godziny po 23:55 trafiają w kolejny dzień i przepadają (cron co 5 min; zmienione z 15 min 2026-11-12, powiadomienie przychodzi do 5 min po czasie).
 
 - [x] Service worker (`public/sw.js`): obsługa `push` i `notificationclick` (otwiera „Dziś” albo „Zapasy”).
 - [x] Klucze VAPID; klucz publiczny w zmiennej środowiskowej, prywatny tylko w sekretach Supabase.
 - [x] Ustawienia → „Włącz powiadomienia”: prośba o zgodę iOS, zapis subskrypcji w `push_subscriptions`. Na iOS działa tylko w PWA dodanej do ekranu głównego (iOS 16.4+); bez tego pokazać instrukcję „Udostępnij → Do ekranu początkowego”.
-- [x] Edge Function `notify` (biblioteka `web-push`), wywoływana przez `pg_cron` co 15 min. Czas liczony w `Europe/Warsaw`.
+- [x] Edge Function `notify` (biblioteka `web-push`), wywoływana przez `pg_cron` co 5 min. Czas liczony w `Europe/Warsaw`.
   - `slot_missed`: minęła `reminder_time` pory i są w niej nieodhaczone leki.
   - `exact_time`: minęła `exact_time` dawki i dawka nie jest odhaczona.
   - `low_stock`: o 9:00, zapas ≤ próg i alert jeszcze nie wysłany.
 - [x] Deduplikacja przez `notification_log`; usuwanie wygasłych subskrypcji (odpowiedź 404 lub 410 z serwera push).
-- [ ] Wdrożyć: sekrety + deploy funkcji, migracja + Vault, zmienna na Vercelu (kroki wyżej).
-- [ ] Sprawdzić na iPhonie: włączenie w PWA, przypomnienie pory, dawka z godziną, niski zapas, kliknięcie otwiera właściwy ekran.
+- [x] Wdrożyć: sekrety + deploy funkcji, migracja + Vault, zmienna na Vercelu (kroki wyżej).
+- [x] Sprawdzić na iPhonie: włączenie w PWA, przypomnienie pory, dawka z godziną, niski zapas, kliknięcie otwiera właściwy ekran.
 
 ## 9. PWA na iPhonie ⟵ 1
 
-- [ ] `apple-touch-icon` 180×180 PNG (iOS nie używa ikony SVG z manifestu) i ikony PNG 192/512 w manifeście.
-- [ ] Sprawdzić `apple-mobile-web-app-status-bar-style` (teraz `black-translucent`) z safe areas w obu motywach.
-- [ ] Ekran startowy (splash) w kolorze `ground`.
+> Kod gotowy 2026-11-12. Ikony i ekrany startowe generuje `npm run pwa:assets` (`scripts/generate-pwa-assets.ts`, `sharp` z Next.js, Node ≥ 22.18) z tego samego znaku co `src/app/icon.svg`; pliki PNG są w repo. Lista urządzeń: `src/lib/pwa/splash.ts` (z niej też tagi w `layout.tsx`). Nowy iPhone = nowa pozycja na liście + ponowne uruchomienie skryptu.
+> Pasek statusu zmieniony na `default`: przy `black-translucent` tekst paska jest zawsze biały, więc w jasnym motywie znikał na `#faf3ea`. Teraz treść zaczyna się pod paskiem (`env(safe-area-inset-top)` = 0 w PWA; wszystkie ekrany mają `max(…, env(...))`, więc odstępy zostają), a pasek przyjmuje kolor systemowy (biały / czarny), minimalnie inny niż `ground`.
+> `tsconfig.json`: `allowImportingTsExtensions` (skrypt importuje `.ts` bezpośrednio, Node uruchamia go bez kompilacji).
+> **Nie sprawdzone na iPhonie:** typy i `next build` przechodzą, tagi w `<head>` sprawdzone na `next start`. Po zmianie ikony trzeba usunąć PWA z ekranu głównego i dodać ponownie (iOS trzyma ikonę i ekrany startowe z chwili instalacji).
+
+- [x] `apple-touch-icon` 180×180 PNG (`src/app/apple-icon.png`, bez zaokrągleń, iOS przycina sam) i ikony PNG 192/512 + maskable 512 w manifeście (`public/icons/`).
+- [x] Pasek statusu: `default` zamiast `black-translucent` (patrz wyżej); `apple-mobile-web-app-capable` dodane ręcznie, bo Next 16 wypisuje tylko `mobile-web-app-capable`.
+- [x] Ekran startowy: 12 rozmiarów iPhone'a (SE → 17 Pro Max) × jasny/ciemny, kolor `ground` ze znakiem pośrodku (`public/splash/`). Tylko pion.
+- [ ] Sprawdzić na iPhonie (po ponownym dodaniu do ekranu głównego): ikona, ekran startowy w obu motywach, czytelny pasek statusu w obu motywach.
 
 ## 10. Jakość
 

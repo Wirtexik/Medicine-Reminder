@@ -1,10 +1,20 @@
 import type { Metadata, Viewport } from "next";
+import { splashStartupImages } from "@/lib/pwa/splash";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Leki",
   description: "Codzienna lista leków, zapasy i przypomnienia.",
-  appleWebApp: { capable: true, title: "Leki", statusBarStyle: "black-translucent" },
+  appleWebApp: {
+    capable: true,
+    title: "Leki",
+    // „default”: pasek statusu nad treścią, tekst ciemny w jasnym motywie i jasny w ciemnym.
+    // „black-translucent” daje zawsze biały tekst – w jasnym motywie nieczytelny na `ground`.
+    statusBarStyle: "default",
+    startupImage: splashStartupImages(),
+  },
+  // Next wypisuje tylko `mobile-web-app-capable`; iOS czyta ekrany startowe przy tej starszej nazwie.
+  other: { "apple-mobile-web-app-capable": "yes" },
 };
 
 export const viewport: Viewport = {

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "db:push": "supabase db push",
-    "db:types": "supabase gen types typescript --linked > src/lib/data/database.types.ts"
+    "db:types": "supabase gen types typescript --linked > src/lib/data/database.types.ts",
+    "pwa:assets": "node scripts/generate-pwa-assets.ts"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",

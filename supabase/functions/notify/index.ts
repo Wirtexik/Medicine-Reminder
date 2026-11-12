@@ -1,5 +1,5 @@
 // Edge Function `notify` (docs/PLAN.md §8, PROJEKT.md §7).
-// Wywołuje ją pg_cron co 15 min (public.invoke_notify) z nagłówkiem x-notify-secret.
+// Wywołuje ją pg_cron co 5 min (public.invoke_notify) z nagłówkiem x-notify-secret.
 // Co wysłać, liczy baza: public.notification_candidates(). Tu: deduplikacja, treść, web-push.
 //
 // Sekrety (supabase secrets set): VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT, NOTIFY_SECRET.
