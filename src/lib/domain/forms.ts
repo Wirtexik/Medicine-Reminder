@@ -1,5 +1,5 @@
 import type { MedForm, MedPackage, StrengthUnit, UnitLabel } from "./types";
-import { formatNumber, packageLabel } from "./format";
+import { formatNumber, packageLabel, unitFor } from "./format";
 
 /*
   Forma leku wyznacza jednostki opakowań (PROJEKT.md §5.2):
@@ -55,10 +55,11 @@ export function packageName(pkg: MedPackage): string {
   return pkg.unitLabel === "krople" || pkg.unitLabel === "ml" ? "Butelka" : packageLabel(pkg);
 }
 
-/** „opak. 20 tabl.”, „butelka 100 kropli”. */
+/** „opak. 20 tabl.”; przy butelce sama pojemność („100 kropli”), bo nazwa to już „Butelka”. */
 export function packageSizeLabel(pkg: MedPackage): string {
   const bottle = pkg.unitLabel === "krople" || pkg.unitLabel === "ml";
-  return `${bottle ? "butelka" : "opak."} ${formatNumber(pkg.packageSize)} ${pkg.unitLabel}`;
+  const size = `${formatNumber(pkg.packageSize)} ${unitFor(pkg.packageSize, pkg.unitLabel)}`;
+  return bottle ? size : `opak. ${size}`;
 }
 
 /** Liczba z pola tekstowego; przecinek dziesiętny dozwolony. NaN przy błędzie. */

@@ -145,15 +145,18 @@ function DoseCard({
 
       <ul className="mt-3 divide-y divide-line">
         {packages.map((pkg) => (
-          <li key={pkg.id} className="flex min-h-14 items-center justify-between gap-3 py-1.5">
-            <span className="text-body">{packages.length === 1 ? "Ilość" : packageName(pkg)}</span>
-            <Stepper
-              label={packages.length === 1 ? `Ilość, ${slotLabel}` : `${packageName(pkg)}, ${slotLabel}`}
-              value={qty(pkg.id)}
-              step={step}
-              unit={unit}
-              onChange={(v) => setQty(pkg.id, v)}
-            />
+          // Przy większym tekście licznik schodzi pod nazwę (wyrównany do prawej), zamiast wypychać kartę.
+          <li key={pkg.id} className="flex min-h-14 flex-wrap items-center justify-between gap-x-3 gap-y-1 py-1.5">
+            <span className="min-w-0 text-body">{packages.length === 1 ? "Ilość" : packageName(pkg)}</span>
+            <div className="ml-auto">
+              <Stepper
+                label={packages.length === 1 ? `Ilość, ${slotLabel}` : `${packageName(pkg)}, ${slotLabel}`}
+                value={qty(pkg.id)}
+                step={step}
+                unit={unit}
+                onChange={(v) => setQty(pkg.id, v)}
+              />
+            </div>
           </li>
         ))}
       </ul>

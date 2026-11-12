@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Sheet } from "@/components/ui/sheet";
 import { shortDate } from "@/lib/dates";
 import { activePeriod, type ChecklistItem } from "@/lib/domain/checklist";
-import { formatNumber, doseBreakdown, doseTotal } from "@/lib/domain/format";
+import { formatNumber, doseBreakdown, doseTotal, unitFor } from "@/lib/domain/format";
 import { FORM_LABEL, packageName, packageSizeLabel } from "@/lib/domain/forms";
 import { forecastMedication } from "@/lib/domain/forecast";
 import type { AppData, DateKey, DosingPeriod, Medication } from "@/lib/domain/types";
@@ -66,7 +66,7 @@ function MedDetails({ med, data, date, today }: { med: Medication; data: AppData
               </span>
               <span className="text-right">
                 <span className="block text-body font-semibold">
-                  {formatNumber(pkg.stock)} {pkg.unitLabel}
+                  {formatNumber(pkg.stock)} {unitFor(pkg.stock, pkg.unitLabel)}
                 </span>
                 <span className={["block text-meta", daysLeft !== null && daysLeft <= forecast.threshold ? "font-semibold text-warn" : "text-text-2"].join(" ")}>
                   {lastDay ? `starczy do ${shortDate(lastDay)}` : "wystarczy na długo"}

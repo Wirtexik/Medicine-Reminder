@@ -158,12 +158,21 @@ Migracje w `supabase/migrations/` (Supabase CLI), zgodnie z PROJEKT.md §6.
 - [x] `apple-touch-icon` 180×180 PNG (`src/app/apple-icon.png`, bez zaokrągleń, iOS przycina sam) i ikony PNG 192/512 + maskable 512 w manifeście (`public/icons/`).
 - [x] Pasek statusu: `default` zamiast `black-translucent` (patrz wyżej); `apple-mobile-web-app-capable` dodane ręcznie, bo Next 16 wypisuje tylko `mobile-web-app-capable`.
 - [x] Ekran startowy: 12 rozmiarów iPhone'a (SE → 17 Pro Max) × jasny/ciemny, kolor `ground` ze znakiem pośrodku (`public/splash/`). Tylko pion.
-- [ ] Sprawdzić na iPhonie (po ponownym dodaniu do ekranu głównego): ikona, ekran startowy w obu motywach, czytelny pasek statusu w obu motywach.
+- [x] Sprawdzić na iPhonie (po ponownym dodaniu do ekranu głównego): ikona, ekran startowy w obu motywach, czytelny pasek statusu w obu motywach.
 
 ## 10. Jakość
 
-- [ ] Testy jednostkowe logiki domenowej (Vitest): `buildChecklist`, `dayMode`, `dayStatus`, `forecastMedication` (w tym zmiana dawki w przyszłym okresie i dawki odhaczone dziś), `formatQuantity` i odmiana „lek/leki/leków”.
-- [ ] Testy funkcji SQL: strażnik daty, ruchy stanu przy odhaczeniu i cofnięciu, RLS (użytkownik A nie widzi danych B).
+> Zrobione 2026-11-13. `npm test` uruchamia oba zestawy (90 testów, ok. 3 s), bez Dockera i bez połączenia z Supabase.
+> Vitest 5 przez `scripts/vitest.mjs`: na Windows terminal VS Code startuje w `c:\…` (mała litera dysku), Vitest ładował się wtedy dwa razy i każdy test padał z „Cannot read properties of undefined (reading 'config')”. Skrypt zmienia katalog na `C:\…`. `@types/node` podniesione do 24 (wymóg Vitest 5; projekt i tak działa na Node 24).
+> Testy SQL (`supabase/tests/`): prawdziwy Postgres w WASM (PGlite) z migracjami z `supabase/migrations/`; `auth`, role (`anon`, `authenticated`, `service_role`), `pg_cron`, `pg_net` i Vault mają minimalne odpowiedniki w `harness.ts`. Użytkownik = `SET ROLE authenticated` + `request.jwt.claim.sub`, jak w Supabase.
+> **Znaleziony błąd:** `ON DELETE RESTRICT` zgłasza `restrict_violation` (23001), a funkcje łapały tylko `foreign_key_violation` (23503). Usunięcie dawki lub okresu z odhaczeniami i usunięcie opakowania użytego w dawce kończyło się komunikatem „Nie udało się zapisać. Sprawdź połączenie” zamiast właściwego. Poprawka: **migracja `20261113000000_restrict_errors.sql` (wgrać w SQL Editor;** potem przy podpinaniu CLI `migration repair --status applied 20261113000000`) + rozpoznawanie 23001 w `saveErrorMessage`.
+> **Układ (Dynamic Type):** sprawdzone automatycznie (Edge + Playwright, atrapa Supabase z danymi testowymi; poza repo) na 19 ekranach i arkuszach × szerokości 320/375/393/440 × tekst 17/23/28/40 px. Poprawione: `fieldset` rósł do szerokości treści (globalne `min-width: 0`), licznik ilości w edytorze dawek i przełącznik mg/µg schodzą do nowej linii, nagłówki „Dziś” i „Leki” się zawijają. Wynik: 17 i 23 px (największy zwykły „Większy tekst”) bez przewijania w poziomie na każdej szerokości; 28 px (AX1) tylko na 320 px edytor dawek wystaje o ok. 9 px; 40 px (AX3) nie mieści się na większości ekranów (patrz „Otwarte decyzje”).
+> Przy okazji: krople bez odmiany („120 krople”, „300 krople”) → `unitFor()` („120 kropli”); przy butelce bez powtórzenia „Butelka · butelka”; na „Dziś” krople i syrop bez drugiej linii powtarzającej dawkę (była „7,5 ml / 7½ ml”), a cały wiersz zostaje polem dotyku ≥ 44 px; ostrzeżenie dev „Date.now() while prerendering” w Ustawieniach (`await connection()` przed `getClaims()`).
+
+- [x] Testy jednostkowe logiki domenowej (Vitest): `buildChecklist`, `dayMode`, `dayStatus`, `forecastMedication` (w tym zmiana dawki w przyszłym okresie i dawki odhaczone dziś), `formatQuantity` i odmiana „lek/leki/leków” (`src/lib/domain/__tests__/`, także podsumowania okresów, `parseNumber`, zmiana czasu i granice miesięcy).
+- [x] Testy funkcji SQL: strażnik daty, ruchy stanu przy odhaczeniu i cofnięciu, RLS (użytkownik A nie widzi danych B) (`supabase/tests/db.test.ts`; także ochrona historii, nakładanie okresów, korekta stanu, uprawnienia `anon` i `service_role`).
+- [ ] Wgrać migrację `20261113000000_restrict_errors.sql`.
+- [x] Skalowanie formularzy na szerokościach iPhone'a i przy „Większym tekście” (patrz wyżej).
 - [ ] Sprawdzenie na prawdziwym iPhonie:
   - krój SF Pro Rounded w tytułach i nazwach leków (zrzuty z Windows pokazują zamiennik),
   - „Większy tekst” w iOS (Dynamic Type),
@@ -178,4 +187,5 @@ Migracje w `supabase/migrations/` (Supabase CLI), zgodnie z PROJEKT.md §6.
 - **Aktywna zakładka w jasnym motywie** ma kolor `action-ink` (#b4471a), bo pomarańcz na białym nie spełnia AA. Jest czytelna, ale słabiej odróżnia się od nieaktywnych. Do oceny na telefonie.
 - **Ekran „Dziś” otwarty o północy:** „dziś” odświeża się co minutę i po powrocie do aplikacji. Do ustalenia, czy wyświetlany dzień ma się wtedy sam przełączyć, jeśli ktoś przegląda wczoraj.
 - **`allowedDevOrigins: ["192.168.1.*"]`** w `next.config.ts` służy tylko do podglądu z telefonu w sieci domowej. Nie wpływa na produkcję.
+- **Największe rozmiary tekstu (AX3 i wyżej, ustawienia dostępności iOS):** układ się nie mieści (wiersze z checkboxem, nazwą i dawką, karty pór, kreator). Wymagałoby osobnych układów „jedno pod drugim” dla dużego tekstu. Do decyzji, czy potrzebne (czy ktoś z użytkowników ma włączony tak duży tekst).
 - **Przycisk „Odhacz całą porę”** pojawia się, gdy w porze zostały co najmniej 2 nieodhaczone dawki. Przy jednej wystarcza checkbox.

@@ -124,7 +124,7 @@ export function Stepper({
       <button type="button" aria-label={`${label}: mniej`} disabled={value <= 0} onClick={() => set(value - step)} className={roundButton}>
         <Minus aria-hidden className="size-5" />
       </button>
-      <output aria-live="polite" className="min-w-[4.5rem] text-center text-body font-semibold whitespace-nowrap">
+      <output aria-live="polite" className="min-w-[3.5rem] text-center text-body font-semibold whitespace-nowrap">
         {formatQuantity(value)}
         {" "}
         <span className="font-normal text-text-2">{unit}</span>

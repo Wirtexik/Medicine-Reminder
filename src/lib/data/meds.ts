@@ -170,7 +170,8 @@ export function saveErrorMessage(e: unknown): string {
   const err = (e ?? {}) as { code?: string; hint?: string };
   if (err.hint && MESSAGES[err.hint]) return MESSAGES[err.hint];
   if (err.code === "23P01") return "Ten okres nachodzi na inny okres dawkowania tego leku.";
-  if (err.code === "23503") return "To opakowanie jest używane w dawkowaniu. Najpierw usuń je z dawek.";
+  // ON DELETE RESTRICT zgłasza 23001 (restrict_violation), nie 23503.
+  if (err.code === "23503" || err.code === "23001") return "To opakowanie jest używane w dawkowaniu. Najpierw usuń je z dawek.";
   if (err.code === "PGRST202") return "Baza nie ma jeszcze funkcji zapisu leków. Trzeba wgrać migracje 20261112120000_meds_editing.sql i 20261112130000_dosing_plan.sql.";
   return "Nie udało się zapisać. Sprawdź połączenie i spróbuj ponownie.";
 }

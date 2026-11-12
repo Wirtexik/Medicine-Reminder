@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { LoadState } from "@/components/app-shell/load-state";
 import { SectionTitle } from "@/components/ui/controls";
 import { useStore } from "@/lib/data/store";
-import { formatNumber, packageLabel } from "@/lib/domain/format";
+import { formatNumber, packageLabel, unitFor } from "@/lib/domain/format";
 import { forecastMedication, type MedForecast } from "@/lib/domain/forecast";
 import { packageName, packageSizeLabel } from "@/lib/domain/forms";
 import { forecastText, StockForecastLine } from "./stock-forecast";
@@ -87,7 +87,7 @@ function LowRow({ forecast, onOpen }: { forecast: MedForecast; onOpen: (medId: s
         <span className="min-w-0 flex-1">
           <span className="block text-body font-semibold text-text">{name}</span>
           <span className="block text-meta text-text-2">
-            {forecastText(weakest)}, masz {formatNumber(weakest.pkg.stock)} {weakest.pkg.unitLabel}
+            {forecastText(weakest)}, masz {formatNumber(weakest.pkg.stock)} {unitFor(weakest.pkg.stock, weakest.pkg.unitLabel)}
           </span>
         </span>
         <span className="flex shrink-0 items-center gap-1 text-meta font-semibold text-text">
@@ -126,7 +126,7 @@ function MedStockCard({ forecast, onOpen }: { forecast: MedForecast; onOpen: (me
               </span>
               <span className="text-right">
                 <span className="block text-body font-semibold whitespace-nowrap">
-                  {formatNumber(f.pkg.stock)} {f.pkg.unitLabel}
+                  {formatNumber(f.pkg.stock)} {unitFor(f.pkg.stock, f.pkg.unitLabel)}
                 </span>
                 <StockForecastLine forecast={f} threshold={threshold} />
               </span>

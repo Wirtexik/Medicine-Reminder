@@ -1,5 +1,6 @@
 import { LogOut } from "lucide-react";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { signOut } from "@/lib/auth/actions";
 import { emailToUsername } from "@/lib/auth/username";
 import { createClient } from "@/lib/supabase/server";
@@ -8,6 +9,9 @@ import { PasswordForm } from "./password-form";
 const card = "rounded-[var(--radius-card)] bg-card px-5 py-5 shadow-[var(--shadow)]";
 
 export async function AccountSection() {
+  // getClaims() czyta Date.now() (ważność tokenu): bez tego Next zgłasza w dev
+  // „unstable value Date.now() while prerendering”.
+  await connection();
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const email = data?.claims?.email;

@@ -7,7 +7,7 @@ import { Sheet } from "@/components/ui/sheet";
 import { TextField } from "@/components/ui/text-field";
 import { addPackages, clearLowStockAlert, correctStock } from "@/lib/data/stock";
 import { useSave } from "@/lib/data/use-save";
-import { formatNumber } from "@/lib/domain/format";
+import { formatNumber, unitFor } from "@/lib/domain/format";
 import { forecastMedication } from "@/lib/domain/forecast";
 import { packageName, parseNumber } from "@/lib/domain/forms";
 import type { AppData, DateKey, Medication, MedPackage } from "@/lib/domain/types";
@@ -99,14 +99,14 @@ function StockForm({
       <div className="mt-3 rounded-[var(--radius-field)] bg-card-muted px-4 py-3">
         <p className="text-meta text-text-2">Masz teraz</p>
         <p className="font-rounded text-title font-bold tracking-[-0.02em]">
-          {formatNumber(pkg.stock)} <span className="text-slot font-semibold text-text-2">{pkg.unitLabel}</span>
+          {formatNumber(pkg.stock)} <span className="text-slot font-semibold text-text-2">{unitFor(pkg.stock, pkg.unitLabel)}</span>
         </p>
         <StockForecastLine forecast={forecast} threshold={med.lowStockDays ?? data.defaultLowStockDays} />
       </div>
 
       <button type="button" disabled={pending} onClick={purchase} className={`${primaryButton} mt-4`}>
         <Plus aria-hidden className="size-5" />
-        {bottle ? "Butelka" : "Opakowanie"} ({formatNumber(pkg.packageSize)} {pkg.unitLabel})
+        {bottle ? "Butelka" : "Opakowanie"} ({formatNumber(pkg.packageSize)} {unitFor(pkg.packageSize, pkg.unitLabel)})
       </button>
 
       <form onSubmit={correct} noValidate className="mt-6 space-y-3 border-t border-line pt-5">

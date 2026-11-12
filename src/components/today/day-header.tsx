@@ -61,7 +61,7 @@ export function DayHeader({
         </div>
       </div>
 
-      <div className="mt-2 flex items-end justify-between gap-3">
+      <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
           <p className="text-meta font-semibold text-text-2 first-letter:uppercase">
             {rel ? `${rel} · ${weekday}` : weekday}

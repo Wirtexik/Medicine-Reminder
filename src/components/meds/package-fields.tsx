@@ -69,8 +69,9 @@ export function PackageFields({
   return (
     <div className="space-y-3">
       {hasStrength(form) && (
-        <div className="flex items-start gap-2">
-          <div className="min-w-0 flex-1">
+        // Przy większym tekście przełącznik mg/µg schodzi pod pole „Moc”.
+        <div className="flex flex-wrap items-start gap-2">
+          <div className="min-w-0 flex-1 basis-[7rem]">
             <TextField
               label="Moc"
               inputMode="decimal"

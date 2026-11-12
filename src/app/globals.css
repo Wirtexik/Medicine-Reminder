@@ -121,6 +121,9 @@ body {
   font-variant-numeric: tabular-nums;
   min-height: 100dvh;
   overscroll-behavior-y: none;
+  /* Przy dużym „Większym tekście” długie słowa (np. „października” w tytule)
+     są szersze niż ekran: łamią się tylko wtedy, gdy się nie mieszczą. */
+  overflow-wrap: break-word;
 }
 
 ::selection {
@@ -131,6 +134,12 @@ body {
 :focus-visible {
   outline: 2.5px solid var(--focus);
   outline-offset: 2px;
+}
+
+/* Domyślnie fieldset ma min-inline-size: min-content i rośnie razem z treścią,
+   zamiast się zwężać: przy większym tekście karta wychodziła poza ekran. */
+fieldset {
+  min-width: 0;
 }
 
 button {

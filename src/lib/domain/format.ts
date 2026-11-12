@@ -1,4 +1,4 @@
-import type { MedPackage, Medication, PeriodDose } from "./types";
+import type { MedPackage, Medication, PeriodDose, UnitLabel } from "./types";
 
 const FRACTIONS: Record<string, string> = {
   "0.25": "¼",
@@ -50,8 +50,7 @@ export function doseBreakdown(med: Pick<Medication, "packages">, dose: Pick<Peri
   if (dose.parts.length === 1) {
     const part = dose.parts[0];
     const pkg = med.packages.find((k) => k.id === part.packageId)!;
-    if (pkg.unitLabel === "krople") return `${formatQuantity(part.quantity)} ${pluralKrople(part.quantity)}`;
-    return `${formatQuantity(part.quantity)} ${pkg.unitLabel}`;
+    return `${formatQuantity(part.quantity)} ${unitFor(part.quantity, pkg.unitLabel)}`;
   }
   return dose.parts
     .map((part) => {
@@ -59,6 +58,11 @@ export function doseBreakdown(med: Pick<Medication, "packages">, dose: Pick<Peri
       return `${formatQuantity(part.quantity)} × ${packageLabel(pkg)}`;
     })
     .join(" + ");
+}
+
+/** Jednostka po liczbie: „1 kropla”, „120 kropli”. Pozostałe (tabl., kaps., ml) to skróty bez odmiany. */
+export function unitFor(n: number, unitLabel: UnitLabel): string {
+  return unitLabel === "krople" ? pluralKrople(n) : unitLabel;
 }
 
 export function pluralKrople(n: number): string {

@@ -22,7 +22,12 @@ export interface DoseRowProps {
 export function DoseRow({ item, mode, editing, overdue, onToggle, onOpen, onMove, canMoveUp, canMoveDown }: DoseRowProps) {
   const { med, dose, taken } = item;
   const total = doseTotal(med, dose);
-  const breakdown = doseBreakdown(med, dose);
+  // Krople i syrop: dawka to już ilość („4 krople”, „7,5 ml”), więc rozpis tylko by ją powtórzył.
+  const bottleOnly = dose.parts.every((p) => {
+    const unit = med.packages.find((k) => k.id === p.packageId)?.unitLabel;
+    return unit === "krople" || unit === "ml";
+  });
+  const breakdown = bottleOnly && total ? "" : doseBreakdown(med, dose);
   const title = `${med.name} ${total}`.trim();
 
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
@@ -49,7 +54,7 @@ export function DoseRow({ item, mode, editing, overdue, onToggle, onOpen, onMove
         type="button"
         onClick={onOpen}
         disabled={editing}
-        className="min-w-0 flex-1 rounded-lg text-left disabled:cursor-default"
+        className="flex min-w-0 flex-1 flex-col justify-center self-stretch rounded-lg text-left disabled:cursor-default"
       >
         <span
           className={[
@@ -59,7 +64,7 @@ export function DoseRow({ item, mode, editing, overdue, onToggle, onOpen, onMove
         >
           {med.name} <span className="whitespace-nowrap">{total}</span>
         </span>
-        <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-text-2">
+        <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-text-2 empty:hidden">
           {dose.exactTime && (
             <span
               className={[

@@ -10,7 +10,7 @@ import { deleteMedication, updateMedication } from "@/lib/data/meds";
 import { useStore } from "@/lib/data/store";
 import { useSave } from "@/lib/data/use-save";
 import { shortDate } from "@/lib/dates";
-import { formatNumber, doseBreakdown, doseTotal } from "@/lib/domain/format";
+import { formatNumber, doseBreakdown, doseTotal, unitFor } from "@/lib/domain/format";
 import { forecastMedication } from "@/lib/domain/forecast";
 import { FORM_LABEL, packageName, packageSizeLabel } from "@/lib/domain/forms";
 import { periodPhase, periodRange, sortedDoses, type PeriodPhase } from "@/lib/domain/summary";
@@ -117,7 +117,7 @@ function MedDetail({ med, data, today, onDeleted }: { med: Medication; data: App
                   <span className="block text-body font-semibold whitespace-nowrap">
                     {formatNumber(pkg.stock)}
                     {" "}
-                    {pkg.unitLabel}
+                    {unitFor(pkg.stock, pkg.unitLabel)}
                   </span>
                   {lastDay && (
                     <span

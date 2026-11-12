@@ -22,7 +22,7 @@ export function MedsScreen() {
 
   return (
     <div className="px-4 pt-[max(3.25rem,calc(env(safe-area-inset-top)+2.75rem))] pb-8">
-      <header className="flex items-end justify-between gap-3 px-1">
+      <header className="flex flex-wrap items-end justify-between gap-3 px-1">
         <h1 className="font-rounded text-title font-bold tracking-[-0.02em]">Leki</h1>
         {active.length > 0 && (
           <Link
