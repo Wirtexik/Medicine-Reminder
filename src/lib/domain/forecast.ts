@@ -9,6 +9,8 @@ export interface PackageForecast {
   /** Ostatni dzień, na który wystarczy; null = poza horyzontem albo nieużywane. */
   lastDay: DateKey | null;
   daysLeft: number | null;
+  /** Czy opakowanie jest w dawkowaniu od dziś (inaczej zapas się nie zmniejsza). */
+  used: boolean;
 }
 
 export interface MedForecast {
@@ -59,6 +61,7 @@ export function forecastMedication(data: AppData, med: Medication, today: DateKe
       pkg,
       lastDay: used.has(pkg.id) ? ld : null,
       daysLeft: ld === null ? null : Math.max(0, daysBetween(today, ld) + 1),
+      used: used.has(pkg.id),
     };
   });
 

@@ -70,6 +70,11 @@ export function pluralKrople(n: number): string {
   return "kropli";
 }
 
+/** 1 dzień, 2 dni, 5 dni. */
+export function pluralDni(n: number): string {
+  return n === 1 ? "dzień" : "dni";
+}
+
 /** Polska odmiana: 1 lek, 2 leki, 5 leków. */
 export function pluralLeki(n: number): string {
   if (n === 1) return "lek";

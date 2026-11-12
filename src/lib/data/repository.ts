@@ -36,7 +36,7 @@ const MEDICATIONS_QUERY = `
 /** Pory, leki (z opakowaniami, okresami i dawkami) i profil: trzy zapytania równolegle. */
 export async function fetchBase(supabase: Client): Promise<BaseData> {
   const [slotsRes, medsRes, profileRes] = await Promise.all([
-    supabase.from("time_slots").select("id, name, sort_order, reminder_time").order("sort_order"),
+    supabase.from("time_slots").select("id, name, sort_order, reminder_time, is_active").order("sort_order"),
     supabase.from("medications").select(MEDICATIONS_QUERY).order("name"),
     supabase.from("profiles").select("low_stock_days").maybeSingle(),
   ]);
@@ -50,6 +50,7 @@ export async function fetchBase(supabase: Client): Promise<BaseData> {
     name: s.name,
     sortOrder: s.sort_order,
     reminderTime: hhmm(s.reminder_time) ?? "",
+    isActive: s.is_active,
   }));
 
   const medications: Medication[] = medsRes.data.map((m) => ({

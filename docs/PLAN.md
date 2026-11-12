@@ -94,18 +94,32 @@ Migracje w `supabase/migrations/` (Supabase CLI), zgodnie z PROJEKT.md §6.
 
 ## 6. Ekran „Zapasy” (faza 4) ⟵ 4
 
-- [ ] Sekcja „Kończą się”: leki poniżej progu, od najpilniejszego (gotowe: `lowStock()` w `src/lib/domain/forecast.ts`).
-- [ ] Wszystkie leki: stan każdego opakowania, dni zapasu, „starczy do”; przy kilku mocach liczy się najsłabsze ogniwo.
-- [ ] Akcje: „+ opakowanie” (ruch `purchase` o rozmiar opakowania) i „Korekta stanu” (ruch `correction`).
-- [ ] Po dodaniu opakowania: jeśli zapas wraca powyżej progu, wyzerować `low_stock_notified_at`.
-- [ ] Alert na ekranie „Dziś” już prowadzi do `/zapasy`.
+> Kod gotowy 2026-11-12, bez nowej migracji. Komponenty w `src/components/stock/`, zapis w `src/lib/data/stock.ts`.
+> „+ opakowanie” to wstawienie ruchu `purchase` do `stock_movements` (RLS i trigger już są); „Korekta stanu” idzie przez istniejące RPC `save_package` (różnicę liczy baza). Oba działania są w arkuszu opakowania (dotknięcie wiersza albo pozycji „Kończą się” → najsłabsze opakowanie), więc przypadkowe dotknięcie niczego nie dopisuje.
+> Wyzerowanie `low_stock_notified_at` po zakupie **i** po korekcie, gdy prognoza z nowym stanem nie jest już poniżej progu. To osobne zapytanie po ruchu (nie jedna transakcja): jeśli się nie uda, zapas i tak jest dopisany, a użytkownik widzi błąd.
+> `PackageForecast` ma nowe pole `used` (opakowanie w dawkowaniu od dziś): odróżnia „nie w dawkowaniu” od „starczy na ponad rok”. Placeholder `LaterScreen` usunięty (nieużywany).
+> **Nie sprawdzone w przeglądarce na koncie:** typy, lint i `next build` przechodzą.
+
+- [x] Sekcja „Kończą się”: leki poniżej progu, od najpilniejszego (gotowe: `lowStock()` w `src/lib/domain/forecast.ts`).
+- [x] Wszystkie leki: stan każdego opakowania, dni zapasu, „starczy do”; przy kilku mocach liczy się najsłabsze ogniwo.
+- [x] Akcje: „+ opakowanie” (ruch `purchase` o rozmiar opakowania) i „Korekta stanu” (ruch `correction`).
+- [x] Po dodaniu opakowania: jeśli zapas wraca powyżej progu, wyzerować `low_stock_notified_at`.
+- [x] Alert na ekranie „Dziś” już prowadzi do `/zapasy`.
+- [ ] Przejść ścieżkę na koncie: „+ opakowanie”, korekta stanu, zniknięcie leku z „Kończą się” i alertu na „Dziś”.
 
 ## 7. Ustawienia ⟵ 3, 4
 
-- [ ] Pory dnia: zmiana nazwy, kolejności, godziny przypomnienia, wyłączanie.
-- [ ] Domyślny próg zapasu (7 dni).
-- [ ] Włączenie powiadomień (p. 8).
-- [ ] Zmiana hasła, wylogowanie.
+> Kod gotowy 2026-11-12, bez nowej migracji (kolumny `time_slots.is_active`, `reminder_time`, `profiles.low_stock_days` już są). Sekcje w `src/components/settings/`, zapis w `src/lib/data/settings.ts`.
+> Pory: arkusz pory (nazwa, godzina przypomnienia albo „bez przypomnienia”, „Pora włączona”), „Zmień kolejność” (strzałki, zapis jednym `upsert` po „Gotowe”), „Dodaj porę” (na koniec listy). Nazwy pór nie mogą się powtarzać. Usuwania pór nie ma (dawki trzymają porę przez `ON DELETE RESTRICT`); zamiast tego wyłączanie.
+> Wyłączona pora: nie da się jej wybrać przy nowej dawce (edytor pokazuje ją tylko w dawce, która już ją ma, z dopiskiem „wyłączona”); dawki, które ją mają, zostają na „Dziś”. `TimeSlot` ma nowe pole `isActive`. **Krok 8 musi pomijać wyłączone pory i pory bez `reminder_time` przy `slot_missed`.**
+> Próg: po zapisie zerowane jest `low_stock_notified_at` leków, które przy nowym progu nie są już poniżej niego.
+> **Nie sprawdzone w przeglądarce na koncie:** typy, lint i `next build` przechodzą.
+
+- [x] Pory dnia: zmiana nazwy, kolejności, godziny przypomnienia, wyłączanie (plus dodanie nowej pory).
+- [x] Domyślny próg zapasu (7 dni).
+- [ ] Włączenie powiadomień (p. 8) — razem z krokiem 8.
+- [x] Zmiana hasła, wylogowanie (z kroku 3).
+- [ ] Przejść ścieżkę na koncie: zmiana nazwy i kolejności pory (widać na „Dziś”), wyłączenie pory z lekiem, nowa pora w edytorze dawek, zmiana progu (widać na „Zapasy”).
 
 ## 8. Powiadomienia (faza 6) ⟵ 2, 7
 

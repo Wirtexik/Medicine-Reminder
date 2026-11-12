@@ -2,6 +2,8 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { AccountSection, AccountSectionSkeleton } from "@/components/settings/account-section";
+import { SlotsSection } from "@/components/settings/slots-section";
+import { ThresholdSection } from "@/components/settings/threshold-section";
 
 export default function SettingsPage() {
   return (
@@ -14,13 +16,12 @@ export default function SettingsPage() {
       </div>
       <h1 className="mt-2 font-rounded text-title font-bold tracking-[-0.02em]">Ustawienia</h1>
 
+      <SlotsSection />
+      <ThresholdSection />
+
       <Suspense fallback={<AccountSectionSkeleton />}>
         <AccountSection />
       </Suspense>
-
-      <p className="mt-6 max-w-[46ch] px-1 text-meta text-text-2">
-        Pory dnia, próg zapasu i powiadomienia pojawią się tutaj w kolejnych fazach.
-      </p>
     </div>
   );
 }

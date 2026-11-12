@@ -14,7 +14,8 @@ export const draftKey = (prefix = "draft") => `${prefix}-${++draftSeq}`;
 
 export function newDose(form: MedForm, packages: MedPackage[], slots: TimeSlot[], existing: DoseDraft[]): DoseDraft {
   const used = new Set(existing.map((d) => d.slotId));
-  const slot = slots.find((s) => !used.has(s.id)) ?? slots[0];
+  const active = slots.filter((s) => s.isActive);
+  const slot = active.find((s) => !used.has(s.id)) ?? active[0] ?? slots[0];
   const { initial } = quantityStep(form);
   return {
     id: draftKey("dose"),
@@ -125,7 +126,9 @@ function DoseCard({
             label="Pora dnia"
             value={dose.slotId}
             onChange={(slotId) => onChange({ slotId })}
-            options={slots.map((s) => ({ value: s.id, label: s.name }))}
+            options={slots
+              .filter((s) => s.isActive || s.id === dose.slotId)
+              .map((s) => ({ value: s.id, label: s.isActive ? s.name : `${s.name} (wyłączona)` }))}
           />
         </div>
         {canRemove && (

@@ -11,8 +11,10 @@ export interface TimeSlot {
   id: string;
   name: string;
   sortOrder: number;
-  /** Godzina przypomnienia o nieodhaczonych, HH:mm. */
+  /** Godzina przypomnienia o nieodhaczonych, HH:mm; "" = bez przypomnienia. */
   reminderTime: string;
+  /** Wyłączonej pory nie wybiera się przy nowych dawkach i nie ma z niej przypomnień. */
+  isActive: boolean;
 }
 
 export interface MedPackage {
