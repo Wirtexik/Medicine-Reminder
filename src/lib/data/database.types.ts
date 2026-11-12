@@ -409,6 +409,12 @@ export type Database = {
         };
         Returns: string;
       };
+      register_push_subscription: { Args: { p_endpoint: string; p_p256dh: string; p_auth: string }; Returns: undefined };
+      notification_candidates: {
+        Args: { p_now?: string };
+        Returns: { user_id: string; kind: string; ref_id: string; date: string; info: Json }[];
+      };
+      invoke_notify: { Args: Record<PropertyKey, never>; Returns: number | null };
     };
     Enums: {
       [_ in never]: never;

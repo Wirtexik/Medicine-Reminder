@@ -105,7 +105,7 @@ Migracje w `supabase/migrations/` (Supabase CLI), zgodnie z PROJEKT.md §6.
 - [x] Akcje: „+ opakowanie” (ruch `purchase` o rozmiar opakowania) i „Korekta stanu” (ruch `correction`).
 - [x] Po dodaniu opakowania: jeśli zapas wraca powyżej progu, wyzerować `low_stock_notified_at`.
 - [x] Alert na ekranie „Dziś” już prowadzi do `/zapasy`.
-- [ ] Przejść ścieżkę na koncie: „+ opakowanie”, korekta stanu, zniknięcie leku z „Kończą się” i alertu na „Dziś”.
+- [x] Przejść ścieżkę na koncie: „+ opakowanie”, korekta stanu, zniknięcie leku z „Kończą się” i alertu na „Dziś”.
 
 ## 7. Ustawienia ⟵ 3, 4
 
@@ -117,20 +117,36 @@ Migracje w `supabase/migrations/` (Supabase CLI), zgodnie z PROJEKT.md §6.
 
 - [x] Pory dnia: zmiana nazwy, kolejności, godziny przypomnienia, wyłączanie (plus dodanie nowej pory).
 - [x] Domyślny próg zapasu (7 dni).
-- [ ] Włączenie powiadomień (p. 8) — razem z krokiem 8.
+- [x] Włączenie powiadomień (p. 8): sekcja „Powiadomienia”.
 - [x] Zmiana hasła, wylogowanie (z kroku 3).
-- [ ] Przejść ścieżkę na koncie: zmiana nazwy i kolejności pory (widać na „Dziś”), wyłączenie pory z lekiem, nowa pora w edytorze dawek, zmiana progu (widać na „Zapasy”).
+- [x] Przejść ścieżkę na koncie: zmiana nazwy i kolejności pory (widać na „Dziś”), wyłączenie pory z lekiem, nowa pora w edytorze dawek, zmiana progu (widać na „Zapasy”).
 
 ## 8. Powiadomienia (faza 6) ⟵ 2, 7
 
-- [ ] Service worker (`public/sw.js`): obsługa `push` i `notificationclick` (otwiera „Dziś” albo „Zapasy”).
-- [ ] Klucze VAPID; klucz publiczny w zmiennej środowiskowej, prywatny tylko w sekretach Supabase.
-- [ ] Ustawienia → „Włącz powiadomienia”: prośba o zgodę iOS, zapis subskrypcji w `push_subscriptions`. Na iOS działa tylko w PWA dodanej do ekranu głównego (iOS 16.4+); bez tego pokazać instrukcję „Udostępnij → Do ekranu początkowego”.
-- [ ] Edge Function `notify` (biblioteka `web-push`), wywoływana przez `pg_cron` co 15 min. Czas liczony w `Europe/Warsaw`.
+> Kod gotowy 2026-11-12. Migracja `supabase/migrations/20261112140000_notifications.sql`, funkcja `supabase/functions/notify/index.ts`, `public/sw.js`, `src/lib/push.ts`, sekcja `src/components/settings/notifications-section.tsx`.
+> **Co wysłać, liczy baza:** `notification_candidates()` (tylko `service_role`) zwraca pozycje dla użytkowników z subskrypcją, z pominięciem tych w `notification_log`. Prognoza zapasu w SQL odwzorowuje `forecastMedication` (400 dni, przyszłe okresy, bez dawek odhaczonych dziś, najsłabsze opakowanie). **Zmiana logiki prognozy w TS wymaga tej samej zmiany w SQL.** Edge Function tylko formatuje treść i wysyła.
+> `slot_missed` pomija wyłączone pory i pory bez `reminder_time`; `exact_time` dotyczy każdej dawki z godziną. `low_stock` od 9:00 (jeśli cron o 9:00 nie zadziała, wyśle przy następnym wywołaniu tego dnia).
+> Deduplikacja: wpis w `notification_log` jest wstawiany **przed** wysyłką (dwa równoległe wywołania nie wyślą dwa razy). Jeśli nie doręczono na żadne urządzenie, wpis jest usuwany i pozycja wraca przy następnym wywołaniu. `low_stock_notified_at` ustawiane tylko po doręczeniu.
+> Subskrypcja przez RPC `register_push_subscription` (`security definer`): endpoint należy do urządzenia, więc po zalogowaniu innej osoby na tym telefonie przechodzi na nią. Przy starcie aplikacji `PushSync` rejestruje SW i odnawia subskrypcję, jeśli użytkownik ją włączył (flaga `leki-push` w `localStorage`).
+> Wywołanie: `pg_cron` (`leki-notify`, `*/15 * * * *`) → `invoke_notify()` → `pg_net` z nagłówkiem `x-notify-secret`. Adres i sekret w **Vault** (`notify_url`, `notify_secret`), nie w repo. Funkcja ma `verify_jwt = false` i sama sprawdza sekret.
+> **Wdrożenie (ręcznie):**
+> 1. `npx supabase secrets set --env-file <plik> --project-ref awbzxrjgkvhjxfstjcsz` z `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `NOTIFY_SECRET`.
+> 2. `npx supabase functions deploy notify --project-ref awbzxrjgkvhjxfstjcsz --use-api --no-verify-jwt`.
+> 3. Migrację `20261112140000_notifications.sql` wgrać w SQL Editor (potem przy podpinaniu CLI `migration repair --status applied 20261112140000`), następnie `vault.create_secret(...)` dla `notify_url` i `notify_secret`.
+> 4. `NEXT_PUBLIC_VAPID_PUBLIC_KEY` na Vercelu (lokalnie już w `.env.local`) i ponowne wdrożenie.
+> **Nie sprawdzone na urządzeniu:** typy, lint i `next build` przechodzą.
+> Znane ograniczenia: wylogowanie nie usuwa subskrypcji urządzenia (do czasu zalogowania kogoś innego przychodzą powiadomienia poprzedniego konta); godziny po 23:45 trafiają w kolejny dzień i przepadają (cron co 15 min).
+
+- [x] Service worker (`public/sw.js`): obsługa `push` i `notificationclick` (otwiera „Dziś” albo „Zapasy”).
+- [x] Klucze VAPID; klucz publiczny w zmiennej środowiskowej, prywatny tylko w sekretach Supabase.
+- [x] Ustawienia → „Włącz powiadomienia”: prośba o zgodę iOS, zapis subskrypcji w `push_subscriptions`. Na iOS działa tylko w PWA dodanej do ekranu głównego (iOS 16.4+); bez tego pokazać instrukcję „Udostępnij → Do ekranu początkowego”.
+- [x] Edge Function `notify` (biblioteka `web-push`), wywoływana przez `pg_cron` co 15 min. Czas liczony w `Europe/Warsaw`.
   - `slot_missed`: minęła `reminder_time` pory i są w niej nieodhaczone leki.
   - `exact_time`: minęła `exact_time` dawki i dawka nie jest odhaczona.
   - `low_stock`: o 9:00, zapas ≤ próg i alert jeszcze nie wysłany.
-- [ ] Deduplikacja przez `notification_log`; usuwanie wygasłych subskrypcji (odpowiedź 404 lub 410 z serwera push).
+- [x] Deduplikacja przez `notification_log`; usuwanie wygasłych subskrypcji (odpowiedź 404 lub 410 z serwera push).
+- [ ] Wdrożyć: sekrety + deploy funkcji, migracja + Vault, zmienna na Vercelu (kroki wyżej).
+- [ ] Sprawdzić na iPhonie: włączenie w PWA, przypomnienie pory, dawka z godziną, niski zapas, kliknięcie otwiera właściwy ekran.
 
 ## 9. PWA na iPhonie ⟵ 1
 

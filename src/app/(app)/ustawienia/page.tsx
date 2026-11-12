@@ -2,6 +2,7 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { AccountSection, AccountSectionSkeleton } from "@/components/settings/account-section";
+import { NotificationsSection } from "@/components/settings/notifications-section";
 import { SlotsSection } from "@/components/settings/slots-section";
 import { ThresholdSection } from "@/components/settings/threshold-section";
 
@@ -18,6 +19,7 @@ export default function SettingsPage() {
 
       <SlotsSection />
       <ThresholdSection />
+      <NotificationsSection />
 
       <Suspense fallback={<AccountSectionSkeleton />}>
         <AccountSection />
