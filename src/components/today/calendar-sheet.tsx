@@ -3,8 +3,9 @@
 import { addMonths, eachDayOfInterval, endOfMonth, endOfWeek, format, isSameMonth, parseISO, startOfMonth, startOfWeek } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { pl } from "date-fns/locale";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Sheet } from "@/components/ui/sheet";
+import { useStore } from "@/lib/data/store";
 import { monthTitle } from "@/lib/dates";
 import { dayStatus, type DayStatus } from "@/lib/domain/checklist";
 import type { AppData, DateKey } from "@/lib/domain/types";
@@ -55,6 +56,14 @@ export function CalendarSheet({
     if (open) setMonth(startOfMonth(parseISO(selected)));
   }
 
+  // Odhaczenia są ładowane miesiącami; dopóki miesiąc się nie wczyta, dni nie mają statusu.
+  const { loadedMonths, ensureMonths } = useStore();
+  const monthKey = format(month, "yyyy-MM");
+  const monthLoaded = loadedMonths.has(monthKey);
+  useEffect(() => {
+    if (open) ensureMonths([monthKey]);
+  }, [open, monthKey, ensureMonths]);
+
   const days = useMemo(
     () =>
       eachDayOfInterval({
@@ -100,7 +109,7 @@ export function CalendarSheet({
           const key = format(day, "yyyy-MM-dd");
           const inMonth = isSameMonth(day, month);
           const past = key <= today;
-          const status: DayStatus = past ? dayStatus(data, key) : "empty";
+          const status: DayStatus = past && monthLoaded ? dayStatus(data, key) : "empty";
           const isToday = key === today;
           const isSelected = key === selected;
           if (!inMonth) {

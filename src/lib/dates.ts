@@ -1,5 +1,5 @@
 import { TZDate } from "@date-fns/tz";
-import { addDays, differenceInCalendarDays, format, parseISO } from "date-fns";
+import { addDays, addMonths, differenceInCalendarDays, endOfMonth, format, parseISO } from "date-fns";
 import { pl } from "date-fns/locale";
 import type { DateKey } from "./domain/types";
 
@@ -39,4 +39,19 @@ export function shortDate(key: DateKey): string {
 
 export function monthTitle(key: DateKey): string {
   return format(parseISO(key), "LLLL yyyy", { locale: pl });
+}
+
+/** Miesiąc daty jako „yyyy-MM”. */
+export function monthOf(key: DateKey): string {
+  return key.slice(0, 7);
+}
+
+export function shiftMonth(month: string, months: number): string {
+  return format(addMonths(parseISO(`${month}-01`), months), "yyyy-MM");
+}
+
+/** Pierwszy i ostatni dzień miesiąca „yyyy-MM”. */
+export function monthRange(month: string): [DateKey, DateKey] {
+  const first = parseISO(`${month}-01`);
+  return [format(first, "yyyy-MM-dd"), format(endOfMonth(first), "yyyy-MM-dd")];
 }

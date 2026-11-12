@@ -3,6 +3,7 @@
 import { CalendarCheck, Package, Pill } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 
 const TABS = [
   { href: "/", label: "Dziś", Icon: CalendarCheck },
@@ -10,8 +11,23 @@ const TABS = [
   { href: "/zapasy", label: "Zapasy", Icon: Package },
 ] as const;
 
+/*
+  usePathname zawiesza się na trasach z parametrami znanymi dopiero w żądaniu (/leki/[id]),
+  więc pasek jest w Suspense; fallback to ten sam pasek bez zaznaczonej zakładki.
+*/
 export function TabBar() {
-  const pathname = usePathname();
+  return (
+    <Suspense fallback={<TabBarView pathname={null} />}>
+      <ActiveTabBar />
+    </Suspense>
+  );
+}
+
+function ActiveTabBar() {
+  return <TabBarView pathname={usePathname()} />;
+}
+
+function TabBarView({ pathname }: { pathname: string | null }) {
   return (
     <nav
       aria-label="Główna nawigacja"
@@ -19,7 +35,7 @@ export function TabBar() {
     >
       <ul className="mx-auto flex max-w-lg">
         {TABS.map(({ href, label, Icon }) => {
-          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+          const active = pathname !== null && (href === "/" ? pathname === "/" : pathname.startsWith(href));
           return (
             <li key={href} className="flex-1">
               <Link

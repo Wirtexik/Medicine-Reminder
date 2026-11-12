@@ -28,7 +28,7 @@ export function packageLabel(pkg: MedPackage): string {
 }
 
 /** Łączna dawka, np. „30 mg”. Dla kropli: liczba kropli. */
-export function doseTotal(med: Medication, dose: PeriodDose): string {
+export function doseTotal(med: Pick<Medication, "packages">, dose: Pick<PeriodDose, "parts">): string {
   const parts = dose.parts.map((p) => ({
     part: p,
     pkg: med.packages.find((k) => k.id === p.packageId)!,
@@ -46,7 +46,7 @@ export function doseTotal(med: Medication, dose: PeriodDose): string {
 }
 
 /** Rozpis opakowań: „1 tabl.” albo „1 × 20 mg + 1 × 10 mg”. */
-export function doseBreakdown(med: Medication, dose: PeriodDose): string {
+export function doseBreakdown(med: Pick<Medication, "packages">, dose: Pick<PeriodDose, "parts">): string {
   if (dose.parts.length === 1) {
     const part = dose.parts[0];
     const pkg = med.packages.find((k) => k.id === part.packageId)!;

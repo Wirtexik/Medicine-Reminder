@@ -1,10 +1,10 @@
 "use client";
 
-import { CalendarX2, Eye } from "lucide-react";
-import { useMemo, useState } from "react";
+import { CalendarX2, CloudOff, Eye } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useToast } from "@/components/ui/toast";
 import { SaveError, useStore } from "@/lib/data/store";
-import { nowTime, shiftDay } from "@/lib/dates";
+import { monthOf, nowTime, shiftDay, shiftMonth } from "@/lib/dates";
 import { buildChecklist, dayMode, type ChecklistItem, type SlotGroup } from "@/lib/domain/checklist";
 import { lowStock } from "@/lib/domain/forecast";
 import type { DateKey } from "@/lib/domain/types";
@@ -17,7 +17,7 @@ import { StockAlert } from "./stock-alert";
 const SAVE_FAILED = "Nie udało się zapisać. Sprawdź połączenie i spróbuj ponownie.";
 
 export function TodayScreen() {
-  const { data, today, setTaken, takeSlot, reorder } = useStore();
+  const { data, today, loadError, reload, ensureMonths, setTaken, takeSlot, reorder } = useStore();
   const toast = useToast();
   const [picked, setPicked] = useState<DateKey | null>(null);
   const [editing, setEditing] = useState(false);
@@ -29,7 +29,14 @@ export function TodayScreen() {
   const groups = useMemo(() => (data && date ? buildChecklist(data, date) : []), [data, date]);
   const low = useMemo(() => (data && today && date === today ? lowStock(data, today) : []), [data, date, today]);
 
-  if (!ready) return <TodaySkeleton />;
+  // Odhaczenia wybranego dnia i sąsiednich miesięcy (kalendarz otwiera się na miesiącu wybranego dnia).
+  useEffect(() => {
+    if (!date) return;
+    const month = monthOf(date);
+    ensureMonths([month, shiftMonth(month, -1), shiftMonth(month, 1)]);
+  }, [date, ensureMonths]);
+
+  if (!ready) return loadError ? <LoadError onRetry={reload} /> : <TodaySkeleton />;
 
   const mode = dayMode(date, today);
   const currentSlotId = date === today ? groups.find((g) => !g.done)?.slot.id : undefined;
@@ -82,7 +89,7 @@ export function TodayScreen() {
             onToggle={toggle}
             onTakeAll={takeAll}
             onOpen={setSheetItem}
-            onReorder={reorder}
+            onReorder={(ids) => guard(reorder(ids))}
           />
         ))}
       </main>
@@ -133,6 +140,25 @@ function EmptyDay() {
       <p className="mt-1 max-w-[30ch] text-meta text-text-2">
         Leki pojawią się tutaj, gdy w zakładce Leki dodasz okres dawkowania obejmujący ten dzień.
       </p>
+    </div>
+  );
+}
+
+function LoadError({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div className="px-4 pt-[max(3.5rem,calc(env(safe-area-inset-top)+3rem))]">
+      <div role="alert" className="flex flex-col items-center rounded-[var(--radius-card)] bg-card-muted px-6 py-10 text-center">
+        <CloudOff aria-hidden className="size-8 text-text-3" />
+        <p className="mt-3 text-body font-semibold">Nie udało się wczytać leków</p>
+        <p className="mt-1 max-w-[30ch] text-meta text-text-2">Sprawdź połączenie z internetem i spróbuj ponownie.</p>
+        <button
+          type="button"
+          onClick={onRetry}
+          className="mt-5 flex h-12 items-center rounded-full bg-action px-6 text-body font-semibold text-on-action active:bg-action-press"
+        >
+          Spróbuj ponownie
+        </button>
+      </div>
     </div>
   );
 }

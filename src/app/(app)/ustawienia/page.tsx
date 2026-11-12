@@ -2,7 +2,6 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { AccountSection, AccountSectionSkeleton } from "@/components/settings/account-section";
-import { DemoSection } from "@/components/settings/demo-section";
 
 export default function SettingsPage() {
   return (
@@ -18,8 +17,6 @@ export default function SettingsPage() {
       <Suspense fallback={<AccountSectionSkeleton />}>
         <AccountSection />
       </Suspense>
-
-      <DemoSection />
 
       <p className="mt-6 max-w-[46ch] px-1 text-meta text-text-2">
         Pory dnia, próg zapasu i powiadomienia pojawią się tutaj w kolejnych fazach.

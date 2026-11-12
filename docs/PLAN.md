@@ -11,7 +11,7 @@
 - [x] **Ekran „Dziś”** (pełny): karty pór, odhaczanie i cofanie z ruchami stanu, „Odhacz całą porę”, zwijanie gotowej pory, nawigacja po dniach (dziś i wczoraj edytowalne, starsze tylko podgląd), kalendarz ze statusem dni, arkusz leku, tryb edycji kolejności (przeciąganie + strzałki), alert niskiego zapasu, baner offline, cofnięcie zmiany przy błędzie zapisu.
 - [x] Logika domenowa w `src/lib/domain/`: wyliczanie checklisty z okresów, status dnia, prognoza zapasu (symulacja dzień po dniu), formatowanie dawek.
 - [x] DESIGN.md + `.impeccable/design.json`, brief ekranu w `.impeccable/surfaces/`.
-- [ ] **Dane są przykładowe** (`src/lib/data/demo.ts`, zapis w localStorage). Wszystko poniżej zakłada przejście na Supabase.
+- [x] Dane z Supabase (krok 4); dane przykładowe usunięte.
 
 ---
 
@@ -56,27 +56,41 @@ Migracje w `supabase/migrations/` (Supabase CLI), zgodnie z PROJEKT.md §6.
 
 ## 4. Warstwa danych na Supabase ⟵ 2, 3
 
-- [ ] Zastąpić `StoreProvider` (localStorage) repozytorium Supabase o **tym samym interfejsie** (`data`, `today`, `setTaken`, `takeSlot`, `reorder`). Ekran „Dziś” nie powinien wymagać zmian.
-- [ ] Odczyt: leki z opakowaniami, okresami i dawkami (jedno zapytanie z zagnieżdżeniami), `intake_log` dla zakresu dat (wybrany dzień ± miesiąc kalendarza), pory, profil.
-- [ ] Zapis przez RPC z p. 2; zachować optymistyczne odhaczanie i cofnięcie zmiany przy błędzie (`SaveError` → toast).
-- [ ] Usunąć dane przykładowe i sekcję „Dane przykładowe” w Ustawieniach.
-- [ ] Odświeżanie „dziś” po północy i po powrocie aplikacji na pierwszy plan (już jest w store; przenieść).
+> Zrobione 2026-11-12: `src/lib/data/repository.ts` (zapytania i mapowanie na model domenowy) + `src/lib/data/store.tsx` (stan, optymistyczne zapisy).
+> Interfejs `StoreProvider` doszedł o `loadError`/`reload` (ekran błędu wczytania z „Spróbuj ponownie”) i `loadedMonths`/`ensureMonths` (doczytywanie odhaczeń miesiącami); `reorder` zwraca teraz `Promise` i przy błędzie pokazuje toast.
+> Zapisy idą przez kolejkę (kolejność RPC = kolejność kliknięć); przy błędzie cofana jest tylko ta zmiana, a dane są odświeżane z bazy. Odczyt, w trakcie którego zmieniono coś lokalnie, jest powtarzany.
+> Po powrocie aplikacji na pierwszy plan dane są odświeżane, jeśli mają ponad 30 s (zmiany z innego urządzenia). Wylogowanie w innej karcie / wygaśnięcie sesji → `/logowanie`.
+> **Nie sprawdzone na koncie z lekami:** w bazie nie ma jeszcze leków (dodawanie to krok 5). Zapytanie zagnieżdżone sprawdzone przez REST (parsuje się, relacje znalezione).
+
+- [x] Zastąpić `StoreProvider` (localStorage) repozytorium Supabase o **tym samym interfejsie** (`data`, `today`, `setTaken`, `takeSlot`, `reorder`).
+- [x] Odczyt: leki z opakowaniami, okresami i dawkami (jedno zapytanie z zagnieżdżeniami), `intake_log` dla zakresu dat (wybrany dzień ± miesiąc, miesiąc w kalendarzu; dziś i wczoraj zawsze), pory, profil.
+- [x] Zapis przez RPC z p. 2; zachować optymistyczne odhaczanie i cofnięcie zmiany przy błędzie (`SaveError` → toast).
+- [x] Usunąć dane przykładowe i sekcję „Dane przykładowe” w Ustawieniach.
+- [x] Odświeżanie „dziś” po północy i po powrocie aplikacji na pierwszy plan (przeniesione; po północy doczytywany jest też nowy miesiąc).
 
 ## 5. Ekran „Leki” (faza 2) ⟵ 4
 
-Dziedziczy DESIGN.md: karty, `font-rounded` dla nazw, pomarańcz tylko na akcjach.
+> Kod gotowy 2026-11-12. Trasy: `/leki` (lista), `/leki/nowy` (kreator), `/leki/[id]` (szczegóły), `/leki/[id]/okres/[periodId]` (edycja okresu). Komponenty w `src/components/meds/`, zapis w `src/lib/data/meds.ts`.
+> **Wymaga migracji `supabase/migrations/20261112120000_meds_editing.sql`** (wgrać w SQL Editor; potem przy podpinaniu CLI także `migration repair --status applied 20261112120000`). Funkcje: `create_medication`, `save_period`, `replace_period_doses`, `delete_period`, `delete_medication`, `save_package`. Bez niej zapis kończy się komunikatem o brakującej migracji.
+> Decyzje: forma leku jest stała po utworzeniu (wyznacza jednostki); krople i syrop nie mają mocy (liczone w kroplach / ml, „Butelka”); zmiana stanu opakowania w arkuszu zapisuje się jako ruch `correction`; usunąć można lek, okres lub dawkę tylko bez historii przyjęć (lek z historią się archiwizuje); edycja okresu, który już trwa, zmienia też minione dni (komunikat kieruje do „Od dnia… nowe dawkowanie”).
+> **Plan dawkowania z etapów** (np. tydzień 40 mg → tydzień 30 mg → 20 mg do wizyty): edytor etapów w kreatorze i na `/leki/[id]/plan` („Od dnia… nowe dawkowanie”). Kolejny etap zaczyna się dzień po końcu poprzedniego i kopiuje jego dawki; każdy etap to osobny okres. Zapis: RPC `plan_periods` z migracji `20261112130000_dosing_plan.sql` (bieżący okres kończy się dzień przed planem, późniejsze okresy są zastępowane; odhaczenia od początku planu blokują zapis). `create_medication` przyjmuje listę `periods`. Arkusz „Od dnia…” usunięty (RPC `start_new_period` zostaje w bazie, nieużywane przez UI).
+> Arkusz leku na ekranie „Dziś” ma link „Szczegóły i dawkowanie”. Dolny pasek jest w `Suspense` (wymóg `cacheComponents` dla tras z parametrem).
+> **Nie sprawdzone w przeglądarce na koncie** (brak dostępu do logowania przy implementacji): typy, lint i `next build` przechodzą.
 
-- [ ] Lista leków: nazwa, aktualna dawka, „starczy do ~dd.MM”. Leki zarchiwizowane w osobnej, zwiniętej sekcji.
-- [ ] Szczegóły leku:
+- [x] Lista leków: nazwa, aktualna dawka, „starczy do ~dd.MM”. Leki zarchiwizowane w osobnej, zwiniętej sekcji.
+- [x] Szczegóły leku:
   - nazwa, forma, opis (jedno pole),
   - opakowania: moc, rozmiar opakowania, stan,
   - oś czasu okresów dawkowania,
   - przycisk „Od dnia… nowe dawkowanie” (RPC `start_new_period`),
   - próg alertu (domyślnie z profilu),
   - archiwizacja.
-- [ ] Kreator „+ Dodaj lek” w 4 krokach: nazwa i forma → opakowania → dawkowanie (pory, ilości z każdego opakowania, opcjonalna godzina, ułamki ½ ¼) → opis.
-- [ ] Edycja dawek w okresie z podglądem sumy („30 mg = 1 × 20 mg + 1 × 10 mg”).
-- [ ] Walidacja: brak nakładających się okresów (komunikat zamiast błędu bazy), ilość > 0, co najmniej jedno opakowanie.
+- [x] Kreator „+ Dodaj lek” w 4 krokach: nazwa i forma → opakowania → dawkowanie (pory, ilości z każdego opakowania, opcjonalna godzina, ułamki ½ ¼) → opis.
+- [x] Edycja dawek w okresie z podglądem sumy („30 mg = 1 × 20 mg + 1 × 10 mg”).
+- [x] Walidacja: brak nakładających się okresów (komunikat zamiast błędu bazy), ilość > 0, co najmniej jedno opakowanie.
+- [x] Wgrać migrację `20261112120000_meds_editing.sql` (sprawdzone 2026-11-12: funkcje są w bazie).
+- [x] Wgrać migrację `20261112130000_dosing_plan.sql` (sprawdzone 2026-11-12: `plan_periods` jest w bazie).
+- [x] Przejść ścieżkę na koncie: dodanie leku, odhaczenie na „Dziś”, plan z kilku etapów, archiwizacja.
 
 ## 6. Ekran „Zapasy” (faza 4) ⟵ 4
 

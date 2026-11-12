@@ -388,6 +388,27 @@ export type Database = {
       take_slot: { Args: { p_dose_ids: string[]; p_date: string }; Returns: undefined };
       reorder_doses: { Args: { p_dose_ids: string[] }; Returns: undefined };
       start_new_period: { Args: { p_medication_id: string; p_from: string }; Returns: string };
+      replace_period_doses: { Args: { p_period_id: string; p_doses: Json; p_package_ids?: string[] }; Returns: undefined };
+      create_medication: { Args: { p: Json }; Returns: string };
+      save_period: {
+        Args: { p_period_id: string; p_from: string; p_to: string | null; p_doses: Json };
+        Returns: undefined;
+      };
+      plan_periods: { Args: { p_medication_id: string; p_periods: Json }; Returns: undefined };
+      delete_period: { Args: { p_period_id: string }; Returns: undefined };
+      delete_medication: { Args: { p_medication_id: string }; Returns: undefined };
+      save_package: {
+        Args: {
+          p_medication_id: string;
+          p_package_id: string | null;
+          p_strength_value: number;
+          p_strength_unit: string;
+          p_unit_label: string;
+          p_package_size: number;
+          p_stock: number | null;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       [_ in never]: never;

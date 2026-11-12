@@ -163,7 +163,7 @@ $$;
 
 -- ───────────────────────────── Triggery ─────────────────────────────
 
--- Nowe konto: profil + 7 domyślnych pór dnia (src/lib/data/demo.ts → DEFAULT_SLOTS).
+-- Nowe konto: profil + 7 domyślnych pór dnia (PROJEKT.md).
 create function public.handle_new_user()
 returns trigger
 language plpgsql

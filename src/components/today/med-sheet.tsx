@@ -1,18 +1,14 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { Sheet } from "@/components/ui/sheet";
 import { shortDate } from "@/lib/dates";
 import { activePeriod, type ChecklistItem } from "@/lib/domain/checklist";
-import { formatNumber, packageLabel, doseBreakdown, doseTotal } from "@/lib/domain/format";
+import { formatNumber, doseBreakdown, doseTotal } from "@/lib/domain/format";
+import { FORM_LABEL, packageName, packageSizeLabel } from "@/lib/domain/forms";
 import { forecastMedication } from "@/lib/domain/forecast";
 import type { AppData, DateKey, DosingPeriod, Medication } from "@/lib/domain/types";
-
-const FORM_LABEL: Record<Medication["form"], string> = {
-  tablet: "Tabletki",
-  capsule: "Kapsułki",
-  drops: "Krople",
-  syrup: "Syrop",
-};
 
 export function MedSheet({
   item,
@@ -65,11 +61,8 @@ function MedDetails({ med, data, date, today }: { med: Medication; data: AppData
           {forecast.packages.map(({ pkg, lastDay, daysLeft }) => (
             <li key={pkg.id} className="flex items-baseline justify-between gap-3 py-3">
               <span className="text-body">
-                {pkg.unitLabel === "krople" ? "Butelka" : packageLabel(pkg)}
-                <span className="text-meta text-text-2">
-                  {" "}
-                  · opak. {pkg.packageSize} {pkg.unitLabel}
-                </span>
+                {packageName(pkg)}
+                <span className="text-meta text-text-2"> · {packageSizeLabel(pkg)}</span>
               </span>
               <span className="text-right">
                 <span className="block text-body font-semibold">
@@ -83,6 +76,14 @@ function MedDetails({ med, data, date, today }: { med: Medication; data: AppData
           ))}
         </ul>
       </section>
+
+      <Link
+        href={`/leki/${med.id}`}
+        className="mt-6 flex h-12 w-full items-center justify-center gap-1 rounded-full border-[1.5px] border-[color-mix(in_srgb,var(--text)_24%,transparent)] text-meta font-semibold text-text"
+      >
+        Szczegóły i dawkowanie
+        <ChevronRight aria-hidden className="size-4" />
+      </Link>
     </div>
   );
 }
