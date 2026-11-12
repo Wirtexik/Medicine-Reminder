@@ -1,0 +1,387 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-12T12:00:00Z",
+  "title": "Design System: Leki",
+  "extensions": {
+    "colorMeta": {
+      "action": {
+        "role": "primary",
+        "displayName": "Pomarańcz akcji",
+        "canonical": "#ff8a3d",
+        "tonalRamp": [
+          "#3d1d08",
+          "#6b3511",
+          "#9c4d18",
+          "#d0661f",
+          "#ff8a3d",
+          "#ffa86f",
+          "#ffc9a3",
+          "#ffe8d6"
+        ]
+      },
+      "action-light": {
+        "role": "primary",
+        "displayName": "Pomarańcz akcji (jasny)",
+        "canonical": "#ff7a45",
+        "tonalRamp": [
+          "#3d1a0b",
+          "#6b2f14",
+          "#9c441c",
+          "#d05a26",
+          "#ff7a45",
+          "#ff9a72",
+          "#ffc0a3",
+          "#ffe6da"
+        ]
+      },
+      "on-action": {
+        "role": "neutral",
+        "displayName": "Tekst na akcji",
+        "canonical": "#1a1410"
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Ciepła noc",
+        "canonical": "#1a1816",
+        "tonalRamp": [
+          "#1a1816",
+          "#211e1c",
+          "#262321",
+          "#36312d",
+          "#93887f",
+          "#b8ada3",
+          "#f4efea",
+          "#faf3ea"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Ciepły grafit",
+        "canonical": "#262321"
+      },
+      "card-muted": {
+        "role": "neutral",
+        "displayName": "Przygaszony grafit",
+        "canonical": "#211e1c"
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Linia",
+        "canonical": "#36312d"
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Ciepła biel",
+        "canonical": "#f4efea"
+      },
+      "text-2": {
+        "role": "neutral",
+        "displayName": "Tekst drugi",
+        "canonical": "#b8ada3"
+      },
+      "text-3": {
+        "role": "neutral",
+        "displayName": "Tekst trzeci",
+        "canonical": "#93887f"
+      },
+      "ok": {
+        "role": "tertiary",
+        "displayName": "Zieleń wziętych",
+        "canonical": "#5cc28a"
+      },
+      "part": {
+        "role": "tertiary",
+        "displayName": "Bursztyn częściowy",
+        "canonical": "#e8b84a"
+      },
+      "miss": {
+        "role": "tertiary",
+        "displayName": "Ceglasta czerwień pominiętych",
+        "canonical": "#ef7a6e"
+      },
+      "warn": {
+        "role": "tertiary",
+        "displayName": "Ostrzeżenie zapasu",
+        "canonical": "#f2b25c"
+      },
+      "warn-soft": {
+        "role": "tertiary",
+        "displayName": "Tło ostrzeżenia",
+        "canonical": "#3a2c1e"
+      },
+      "ground-light": {
+        "role": "neutral",
+        "displayName": "Krem (jasny)",
+        "canonical": "#faf3ea"
+      },
+      "card-light": {
+        "role": "neutral",
+        "displayName": "Biała karta (jasny)",
+        "canonical": "#ffffff"
+      },
+      "card-muted-light": {
+        "role": "neutral",
+        "displayName": "Przygaszony krem (jasny)",
+        "canonical": "#f4ece2"
+      },
+      "ok-light": {
+        "role": "tertiary",
+        "displayName": "Zieleń wziętych (jasny, 4.5:1 na card-muted)",
+        "canonical": "#23704a"
+      },
+      "miss-light": {
+        "role": "tertiary",
+        "displayName": "Czerwień pominiętych (jasny)",
+        "canonical": "#a8352c"
+      },
+      "warn-light": {
+        "role": "tertiary",
+        "displayName": "Ostrzeżenie (jasny)",
+        "canonical": "#9a4f0a"
+      },
+      "action-ink": {
+        "role": "primary",
+        "displayName": "Akcja jako tekst/ikona",
+        "canonical": "#ff8a3d"
+      },
+      "action-ink-light": {
+        "role": "primary",
+        "displayName": "Akcja jako tekst/ikona (jasny)",
+        "canonical": "#b4471a"
+      }
+    },
+    "typographyMeta": {
+      "title": {
+        "displayName": "Title",
+        "purpose": "Data w nagłówku, nazwa leku w arkuszu. SF Pro Rounded."
+      },
+      "med": {
+        "displayName": "Med",
+        "purpose": "Nazwa leku z sumą dawki w wierszu. SF Pro Rounded."
+      },
+      "slot": {
+        "displayName": "Slot",
+        "purpose": "Tytuł bieżącej pory. SF Pro Rounded."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Treść, przyciski, tost. 1rem = rozmiar tekstu iOS (Dynamic Type), 17px poza iOS."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Rozbicie dawki, liczniki, dzień tygodnia, chip godziny."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Skróty dni tygodnia w kalendarzu."
+      }
+    },
+    "shadows": [
+      {
+        "name": "raised-dark",
+        "value": "0 1px 2px rgb(0 0 0 / 0.3), 0 8px 20px -10px rgb(0 0 0 / 0.55)",
+        "purpose": "Karta bieżącej pory, przeciągany wiersz, tost (motyw ciemny)."
+      },
+      {
+        "name": "raised-light",
+        "value": "0 1px 2px rgb(60 40 20 / 0.06), 0 6px 18px -8px rgb(60 40 20 / 0.18)",
+        "purpose": "To samo w motywie jasnym."
+      },
+      {
+        "name": "scrim",
+        "value": "rgb(0 0 0 / 0.6) dark; rgb(20 14 10 / 0.42) light",
+        "purpose": "Tło pod bottom sheetem."
+      },
+      {
+        "name": "bar",
+        "value": "rgb(22 20 18 / 0.92) dark; rgb(255 255 255 / 0.92) light; backdrop-filter: blur(24px)",
+        "purpose": "Półprzezroczysty pasek zakładek."
+      },
+      {
+        "name": "focus",
+        "value": "outline: 2.5px solid var(--focus); outline-offset: 2px",
+        "purpose": "Fokus klawiatury w kolorze tekstu głównego."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Jedyna krzywa; bez overshoot."
+      },
+      {
+        "name": "press",
+        "value": "150ms; scale(0.98) szerokie, scale(0.9) okrągłe",
+        "purpose": "Wciśnięcie przycisku."
+      },
+      {
+        "name": "check",
+        "value": "200ms fill + check-pop 280ms (scale 0.55 -> 1)",
+        "purpose": "Odhaczenie dawki."
+      },
+      {
+        "name": "toast-in",
+        "value": "240ms translateY(12px) -> 0",
+        "purpose": "Wjazd tostu."
+      },
+      {
+        "name": "slot-fold",
+        "value": "650ms hold, then grid-template-rows 420ms ease-out-expo",
+        "purpose": "Zwinięcie skończonej pory w miejscu."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "1ms",
+        "purpose": "prefers-reduced-motion skraca wszystkie animacje."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile-max",
+        "value": "32rem"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Odhacz całą porę w bieżącej porze; pełna kapsuła w kolorze akcji z ciemnym tekstem.",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 6 7 17l-5-5\"/><path d=\"m22 10-7.5 7.5L13 16\"/></svg>Odhacz całą porę</button>",
+      "css": ".ds-btn-primary { display: flex; width: 100%; height: 3.25rem; align-items: center; justify-content: center; gap: 0.5rem; border: none; border-radius: 9999px; background: var(--action, #ff8a3d); color: var(--on-action, #1a1410); font: 600 1rem/1.35 -apple-system, system-ui, sans-serif; cursor: pointer; transition: transform 150ms, background-color 150ms; } .ds-btn-primary:active { background: var(--action-press, #f47a2b); transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: 2.5px solid var(--focus, #f4efea); outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Ta sama akcja w porach innych niż bieżąca; bez pomarańczu.",
+      "html": "<button class=\"ds-btn-outline\">Odhacz całą porę</button>",
+      "css": ".ds-btn-outline { display: flex; width: 100%; height: 3rem; align-items: center; justify-content: center; border: 1.5px solid color-mix(in srgb, var(--text, #f4efea) 24%, transparent); border-radius: 9999px; background: transparent; color: var(--text, #f4efea); font: 600 0.88rem/1.3 -apple-system, system-ui, sans-serif; cursor: pointer; transition: transform 150ms; } .ds-btn-outline:active { transform: scale(0.98); } .ds-btn-outline:focus-visible { outline: 2.5px solid var(--focus, #f4efea); outline-offset: 2px; }"
+    },
+    {
+      "name": "Round Icon Button",
+      "kind": "button",
+      "refersTo": "button-round",
+      "description": "Nawigacja dnia i kalendarz w nagłówku; koło 44pt na karcie.",
+      "html": "<button class=\"ds-btn-round\" aria-label=\"Następny dzień\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></button>",
+      "css": ".ds-btn-round { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: none; border-radius: 9999px; background: var(--card, #262321); color: var(--text, #f4efea); cursor: pointer; transition: transform 150ms; } .ds-btn-round:active { transform: scale(0.9); } .ds-btn-round:focus-visible { outline: 2.5px solid var(--focus, #f4efea); outline-offset: 2px; } .ds-btn-round:disabled { opacity: 0.4; }"
+    },
+    {
+      "name": "Dose Check",
+      "kind": "custom",
+      "refersTo": "dose-check-checked",
+      "description": "Okrągły checkbox dawki: 48px pole dotyku, 30px kółko, wypełnia się kolorem akcji.",
+      "html": "<button class=\"ds-check\" role=\"checkbox\" aria-checked=\"false\" aria-label=\"Ramipril 5 mg\"><span class=\"ds-check-dot\"></span></button><button class=\"ds-check\" role=\"checkbox\" aria-checked=\"true\" aria-label=\"Metformina 500 mg\"><span class=\"ds-check-dot ds-check-on\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg></span></button>",
+      "css": ".ds-check { display: grid; place-items: center; width: 3rem; height: 3rem; border: none; background: transparent; border-radius: 9999px; cursor: pointer; } .ds-check-dot { display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 9999px; border: 2.5px solid var(--text-2, #b8ada3); transition: background-color 200ms cubic-bezier(0.16,1,0.3,1), border-color 200ms, transform 200ms; } .ds-check-on { background: var(--action, #ff8a3d); border-color: var(--action, #ff8a3d); color: var(--on-action, #1a1410); } .ds-check:active .ds-check-dot { transform: scale(0.9); } .ds-check:focus-visible { outline: 2.5px solid var(--focus, #f4efea); outline-offset: 2px; }"
+    },
+    {
+      "name": "Current Slot Card",
+      "kind": "card",
+      "refersTo": "slot-card-current",
+      "description": "Jedyna uniesiona karta: bieżąca pora z dużymi wierszami leków.",
+      "html": "<section class=\"ds-slot ds-slot-current\"><header class=\"ds-slot-head\"><h2 class=\"ds-slot-title\">Po śniadaniu</h2><span class=\"ds-slot-count\">0 z 3</span></header><ul class=\"ds-slot-rows\"><li><span class=\"ds-med\">Ramipril 5&nbsp;mg</span><span class=\"ds-meta\">1&nbsp;kaps.</span></li><li><span class=\"ds-med\">Prednizon 30&nbsp;mg</span><span class=\"ds-meta\">1 × 20&nbsp;mg + 1 × 10&nbsp;mg</span></li></ul></section>",
+      "css": ".ds-slot { border-radius: 1.35rem; padding: 0 1.25rem 0.5rem; color: var(--text, #f4efea); } .ds-slot-current { background: var(--card, #262321); box-shadow: var(--shadow, 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 20px -10px rgb(0 0 0 / 0.55)); } .ds-slot-head { display: flex; align-items: center; min-height: 3.5rem; gap: 0.75rem; } .ds-slot-title { flex: 1; margin: 0; font: 700 1.18rem/1.2 ui-rounded, \"SF Pro Rounded\", -apple-system, system-ui, sans-serif; } .ds-slot-count { font: 600 0.88rem/1.3 -apple-system, system-ui, sans-serif; color: var(--text-2, #b8ada3); font-variant-numeric: tabular-nums; } .ds-slot-rows { list-style: none; margin: 0; padding: 0; } .ds-slot-rows li { display: flex; flex-direction: column; justify-content: center; min-height: 4.25rem; border-top: 1px solid var(--line, #36312d); } .ds-slot-rows li:first-child { border-top: none; } .ds-med { font: 600 1.3rem/1.15 ui-rounded, \"SF Pro Rounded\", -apple-system, system-ui, sans-serif; letter-spacing: -0.01em; } .ds-meta { margin-top: 0.125rem; font: 400 0.88rem/1.3 -apple-system, system-ui, sans-serif; color: var(--text-2, #b8ada3); font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Folded Slot Card",
+      "kind": "card",
+      "refersTo": "slot-card",
+      "description": "Skończona pora zwinięta do jednej linii na card-muted; dotknięcie rozwija w miejscu.",
+      "html": "<button class=\"ds-slot-folded\" aria-expanded=\"false\"><span class=\"ds-slot-folded-title\">Przed śniadaniem</span><span class=\"ds-slot-ok\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg>1/1</span><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" class=\"ds-slot-chev\"><path d=\"m6 9 6 6 6-6\"/></svg></button>",
+      "css": ".ds-slot-folded { display: flex; width: 100%; align-items: center; gap: 0.75rem; min-height: 3.5rem; padding: 0 1.25rem; border: none; border-radius: 1.35rem; background: var(--card-muted, #211e1c); text-align: left; cursor: pointer; } .ds-slot-folded-title { flex: 1; font: 600 1rem/1.35 ui-rounded, \"SF Pro Rounded\", -apple-system, system-ui, sans-serif; color: var(--text-2, #b8ada3); } .ds-slot-ok { display: flex; align-items: center; gap: 0.375rem; font: 600 0.88rem/1.3 -apple-system, system-ui, sans-serif; color: var(--ok, #5cc28a); font-variant-numeric: tabular-nums; } .ds-slot-chev { color: var(--text-3, #93887f); transition: transform 300ms; } .ds-slot-folded[aria-expanded=true] .ds-slot-chev { transform: rotate(180deg); } .ds-slot-folded:focus-visible { outline: 2.5px solid var(--focus, #f4efea); outline-offset: 2px; }"
+    },
+    {
+      "name": "Stock Alert",
+      "kind": "card",
+      "refersTo": "stock-alert",
+      "description": "Karta-link niskiego zapasu na warn-soft; bez pomarańczu akcji.",
+      "html": "<a class=\"ds-stock\" href=\"#\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" class=\"ds-stock-icon\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg><span class=\"ds-stock-text\"><span class=\"ds-stock-title\">Prednizon 10&nbsp;mg się kończy</span><span class=\"ds-stock-meta\">starczy do 15.11</span></span></a>",
+      "css": ".ds-stock { display: flex; align-items: center; gap: 0.75rem; min-height: 3.75rem; padding: 0.75rem 1rem; border-radius: 1.35rem; background: var(--warn-soft, #3a2c1e); text-decoration: none; } .ds-stock-icon { flex-shrink: 0; color: var(--warn, #f2b25c); } .ds-stock-text { display: flex; flex-direction: column; } .ds-stock-title { font: 600 1rem/1.35 -apple-system, system-ui, sans-serif; color: var(--text, #f4efea); } .ds-stock-meta { font: 400 0.88rem/1.3 -apple-system, system-ui, sans-serif; color: var(--text-2, #b8ada3); font-variant-numeric: tabular-nums; } .ds-stock:focus-visible { outline: 2.5px solid var(--focus, #f4efea); outline-offset: 2px; }"
+    },
+    {
+      "name": "Time Chip",
+      "kind": "chip",
+      "refersTo": "time-chip",
+      "description": "Godzina przy leku z konkretną porą; po terminie przechodzi na kolory ostrzeżenia.",
+      "html": "<span class=\"ds-chip\">14:00</span> <span class=\"ds-chip ds-chip-overdue\">08:00</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.125rem 0.5rem; border-radius: 9999px; background: var(--ground, #1a1816); color: var(--text, #f4efea); font: 600 0.88rem/1.3 -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-chip-overdue { background: var(--warn-soft, #3a2c1e); color: var(--warn, #f2b25c); }"
+    },
+    {
+      "name": "Tab Bar",
+      "kind": "nav",
+      "refersTo": "tab-bar-active",
+      "description": "Stały dolny pasek Dziś · Leki · Zapasy, aktywna zakładka w kolorze akcji.",
+      "html": "<nav class=\"ds-tabs\"><a class=\"ds-tab ds-tab-active\" aria-current=\"page\" href=\"#\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 2v4\"/><path d=\"M16 2v4\"/><rect width=\"18\" height=\"18\" x=\"3\" y=\"4\" rx=\"2\"/><path d=\"M3 10h18\"/><path d=\"m9 16 2 2 4-4\"/></svg>Dziś</a><a class=\"ds-tab\" href=\"#\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z\"/><path d=\"m8.5 8.5 7 7\"/></svg>Leki</a></nav>",
+      "css": ".ds-tabs { display: flex; border-top: 1px solid var(--line, #36312d); background: var(--bar, rgb(22 20 18 / 0.92)); backdrop-filter: blur(24px); } .ds-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.125rem; height: 3.4rem; font: 600 0.8rem/1.25 -apple-system, system-ui, sans-serif; color: var(--text-2, #b8ada3); text-decoration: none; transition: color 150ms; } .ds-tab-active { color: var(--action-ink, #ff8a3d); } .ds-tab:focus-visible { outline: 2.5px solid var(--focus, #f4efea); outline-offset: -2px; }"
+    },
+    {
+      "name": "Toast",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Odwrócony komunikat nad paskiem zakładek, np. cofnięte odhaczenie po błędzie zapisu.",
+      "html": "<div class=\"ds-toast\" role=\"status\">Nie udało się zapisać. Spróbuj ponownie.</div>",
+      "css": ".ds-toast { display: inline-flex; max-width: 28rem; padding: 0.75rem 1rem; border-radius: 0.9rem; background: var(--text, #f4efea); color: var(--ground, #1a1816); font: 400 1rem/1.35 -apple-system, system-ui, sans-serif; box-shadow: var(--shadow, 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 20px -10px rgb(0 0 0 / 0.55)); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Ciepła kolumna dnia",
+    "overview": "Dzień to kolumna miękkich kart, jedna na porę dnia, na ciepło zabarwionym ciemnym tle. Karta bieżącej pory jest jedyną uniesioną: jaśniejsza, z cieniem, z dużymi wierszami leków i pełnym pomarańczowym przyciskiem. Pozostałe pory leżą płasko i ciszej, a pora skończona zwija się w miejscu do jednej linii. Całość ma się czuć jak natywna aplikacja iOS w jednej ręce, nie jak kliniczna lista ani tablica nawyków.\n\nGęstość jest celowo niska: duże promienie, hojne wcięcia, wiersze leków nie niższe niż 4.25rem, każdy cel dotyku co najmniej 44pt. Jedyny nasycony kolor na ekranie to zawsze coś, co można nacisnąć. Kolory stanów (wzięte, część, pominięte, ostrzeżenie) niosą wyłącznie znaczenie i nigdy nie są dekoracją.\n\nMotyw ciemny jest główny; jasny przychodzi z systemu (`prefers-color-scheme`) i powtarza ten sam układ: ciepłe kremowe tło z białymi kartami.",
+    "keyCharacteristics": [
+      "Ciepłe, grafitowe karty na brązowo-czarnym tle (ciemny) lub białe karty na kremie (jasny).",
+      "Jeden kolor akcji (pomarańcz) z ciemnym tekstem, zarezerwowany dla rzeczy do naciśnięcia.",
+      "Systemowy krój SF Pro z Dynamic Type; SF Pro Rounded dla tytułów i nazw leków.",
+      "Głębia przez jedną uniesioną kartę, reszta warstwuje się tonem.",
+      "Ruch krótki, wygaszany (expo out), bez odbicia."
+    ],
+    "rules": [
+      {
+        "name": "The Press-Only Orange Rule",
+        "body": "Pomarańcz pojawia się tylko na elemencie, który można nacisnąć, albo na wypełnionym checkboxie dawki. Nigdy na tekście informacyjnym, ikonie stanu, tle karty ani ozdobie.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dark-On-Orange Rule",
+        "body": "Tekst i ikony na pomarańczu mają zawsze kolor `on-action`.",
+        "section": "colors"
+      },
+      {
+        "name": "The Meaning-Only State Rule",
+        "body": "`ok`, `part`, `miss`, `warn` oznaczają stan i nic poza tym. Status w kalendarzu ma zawsze kształt oprócz koloru: pełna kropka, pół kropki, pusty pierścień.",
+        "section": "colors"
+      },
+      {
+        "name": "The Rounded-For-Names Rule",
+        "body": "SF Pro Rounded tylko dla daty, tytułów pór, nazw leków i tytułów arkuszy. Tekst ciągły, metadane i przyciski zostają w SF Pro Text.",
+        "section": "typography"
+      },
+      {
+        "name": "The Unbroken Dose Rule",
+        "body": "Liczba i jednostka są zawsze połączone twardą spacją (`20 mg`, `1 tabl.`), a suma dawki przy nazwie leku nie łamie się (`white-space: nowrap`).",
+        "section": "typography"
+      },
+      {
+        "name": "The One Raised Card Rule",
+        "body": "Na ekranie „Dziś” uniesiona jest tylko karta bieżącej pory. Pozostałe karty są płaskie i ciszej tonowane; tylko bieżąca pora ma pełny pomarańczowy przycisk.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** używać `action` wyłącznie dla elementów do naciśnięcia i wypełnionego checkboxa, zawsze z `on-action` na wierzchu.",
+      "**Do** unosić tylko kartę bieżącej pory (`card` + cień) i dawać pełny pomarańczowy przycisk tylko jej; inne pory dostają `card-muted` i przycisk z obrysem.",
+      "**Do** utrzymywać cele dotyku co najmniej 2.75rem (44pt) i wiersze leków co najmniej 4.25rem.",
+      "**Do** łączyć liczbę z jednostką twardą spacją i trzymać cyfry tabelaryczne.",
+      "**Do** dawać statusom kształt oprócz koloru (pełna kropka / pół kropki / pusty pierścień; przerywany pierścień dla pominiętej).",
+      "**Do** skalować typografię względem `1rem` = rozmiar tekstu iOS, by działał Dynamic Type.",
+      "**Do** zwijać skończoną porę w miejscu, krzywą `--ease-out-expo`, bez zmiany kolejności kart."
+    ],
+    "donts": [
+      "**Don't** używać pomarańczu na tekście informacyjnym, ikonach stanu, tłach kart ani ozdobach.",
+      "**Don't** stawiać białego tekstu na pomarańczu.",
+      "**Don't** używać kolorów stanu jako akcentów ani dekoracji.",
+      "**Don't** używać krzywych z odbiciem (overshoot) ani sprężyn przekraczających cel.",
+      "**Don't** dodawać kickerów, eyebrowów ani nadtytułów nad nagłówkami; linia „Dziś · czwartek” nad datą to dane, nie ozdoba.",
+      "**Don't** wprowadzać grywalizacji (serie, pierścienie postępu, motywujące komunikaty) ani klinicznej grupowanej listy."
+    ]
+  }
+}

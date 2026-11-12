@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+/*
+  Leki – ciepła powierzchnia aplikacji.
+  Ciemny motyw jest głównym; jasny przychodzi z systemu.
+  Pomarańcz (--action) jest zarezerwowany wyłącznie dla rzeczy, które można nacisnąć,
+  oraz dla wypełnionego checkboxa. Tekst na pomarańczu jest zawsze ciemny.
+*/
+
+:root {
+  color-scheme: light dark;
+
+  /* jasny */
+  --ground: #faf3ea;
+  --card: #ffffff;
+  --card-muted: #f4ece2;
+  --line: #e9dfd3;
+  --text: #2b241f;
+  --text-2: #6c5f56;
+  --text-3: #7a6c61;
+  --action: #ff7a45;
+  --action-press: #f26a33;
+  --on-action: #241a14;
+  --action-ink: #b4471a; /* akcja jako sam tekst/ikona na jasnym tle (AA) */
+  --warn: #9a4f0a;
+  --warn-soft: #fbe6cf;
+  --ok: #23704a;
+  --part: #c58a12;
+  --miss: #a8352c;
+  --focus: #2b241f;
+  --scrim: rgb(20 14 10 / 0.42);
+  --shadow: 0 1px 2px rgb(60 40 20 / 0.06), 0 6px 18px -8px rgb(60 40 20 / 0.18);
+  --bar: rgb(255 255 255 / 0.92);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #1a1816;
+    --card: #262321;
+    --card-muted: #211e1c;
+    --line: #36312d;
+    --text: #f4efea;
+    --text-2: #b8ada3;
+    --text-3: #93887f;
+    --action: #ff8a3d;
+    --action-press: #f47a2b;
+    --on-action: #1a1410;
+    --action-ink: #ff8a3d;
+    --warn: #f2b25c;
+    --warn-soft: #3a2c1e;
+    --ok: #5cc28a;
+    --part: #e8b84a;
+    --miss: #ef7a6e;
+    --focus: #f4efea;
+    --scrim: rgb(0 0 0 / 0.6);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 20px -10px rgb(0 0 0 / 0.55);
+    --bar: rgb(22 20 18 / 0.92);
+  }
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-card: var(--card);
+  --color-card-muted: var(--card-muted);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-action: var(--action);
+  --color-action-press: var(--action-press);
+  --color-on-action: var(--on-action);
+  --color-action-ink: var(--action-ink);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-ok: var(--ok);
+  --color-part: var(--part);
+  --color-miss: var(--miss);
+
+  --font-sans: -apple-system, "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif;
+  /* SF Pro Rounded dla tytułów i nazw leków: ciepło świata bez obcego kroju */
+  --font-rounded: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+
+  /* skala pisma (1rem = rozmiar tekstu iOS, domyślnie 17px) */
+  --text-caption: 0.8rem;
+  --text-caption--line-height: 1.25;
+  --text-meta: 0.88rem;
+  --text-meta--line-height: 1.3;
+  --text-body: 1rem;
+  --text-body--line-height: 1.35;
+  --text-slot: 1.18rem;
+  --text-slot--line-height: 1.2;
+  --text-med: 1.3rem;
+  --text-med--line-height: 1.15;
+  --text-title: 1.8rem;
+  --text-title--line-height: 1.05;
+
+  --radius-card: 1.35rem;
+  --radius-field: 0.9rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 106.25%; /* 17px poza iOS */
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS: tekst rośnie razem z ustawieniem „Większy tekst” */
+@supports (font: -apple-system-body) {
+  html {
+    font: -apple-system-body;
+    font-family: var(--font-sans);
+  }
+}
+
+body {
+  background: var(--ground);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--action) 35%, transparent);
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--focus);
+  outline-offset: 2px;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+@keyframes check-pop {
+  from {
+    transform: scale(0.55);
+    opacity: 0.4;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

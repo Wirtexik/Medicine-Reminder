@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned3.html"
+        ],
+        "createdAt": "2026-11-11T22:44:54.092Z",
+        "reason": "assistant triage: .dial children are absolutely positioned with 16px left/right and 10-12px top/bottom insets; detector misreads flush"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "frutiger",
+        "files": [
+          ".impeccable/mocks/decision/challenger-terminal.html"
+        ],
+        "createdAt": "2026-11-11T23:56:37.892Z",
+        "reason": "assistant triage: sketch of a direction rejected in the decision round; not shipping code, kept only as round history"
+      }
+    ]
+  }
+}
