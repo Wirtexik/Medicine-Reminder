@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FormError, outlineButton, primaryButton } from "@/components/ui/controls";
 import { Sheet } from "@/components/ui/sheet";
 import { TextField } from "@/components/ui/text-field";
@@ -56,7 +56,11 @@ function StockForm({
   const { run, pending, error } = useSave();
   const [stock, setStock] = useState("");
   const [stockError, setStockError] = useState<string | null>(null);
-  const forecast = forecastMedication(data, med, today).packages.find((p) => p.pkg.id === pkg.id)!;
+  // Bez useMemo symulacja (400 dni) szła przy każdym znaku wpisanym w „Korekta stanu”.
+  const forecast = useMemo(
+    () => forecastMedication(data, med, today).packages.find((p) => p.pkg.id === pkg.id)!,
+    [data, med, today, pkg.id],
+  );
   const multi = med.packages.length > 1;
   const bottle = pkg.unitLabel === "krople" || pkg.unitLabel === "ml";
 

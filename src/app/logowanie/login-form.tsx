@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { TextField } from "@/components/ui/text-field";
 import { signIn, type SignInState } from "@/lib/auth/actions";
+import { primaryButton } from "@/components/ui/buttons";
 
 const initial: SignInState = { error: null, username: "" };
 
@@ -43,7 +44,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="flex h-[3.25rem] w-full items-center justify-center rounded-full bg-action text-body font-semibold text-on-action transition-[transform,background-color] duration-150 active:scale-[0.98] active:bg-action-press disabled:opacity-60"
+        className={primaryButton}
       >
         {pending ? "Logowanie…" : "Zaloguj się"}
       </button>

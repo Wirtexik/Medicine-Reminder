@@ -10,8 +10,12 @@ export interface SignInState {
   username: string;
 }
 
+export type PasswordField = "current" | "next" | "repeat";
+
 export interface PasswordState {
   error: string | null;
+  /** Pole, którego dotyczy błąd (oznaczane `aria-invalid`); null = błąd ogólny. */
+  field?: PasswordField | null;
   ok: boolean;
 }
 
@@ -61,9 +65,10 @@ export async function changePassword(_prev: PasswordState, formData: FormData): 
   const next = String(formData.get("next") ?? "");
   const repeat = String(formData.get("repeat") ?? "");
 
-  if (!current || !next) return { error: "Wypełnij wszystkie pola.", ok: false };
-  if (next.length < 8) return { error: "Nowe hasło musi mieć co najmniej 8 znaków.", ok: false };
-  if (next !== repeat) return { error: "Nowe hasła nie są takie same.", ok: false };
+  if (!current) return { error: "Wpisz obecne hasło.", field: "current", ok: false };
+  if (!next) return { error: "Wpisz nowe hasło.", field: "next", ok: false };
+  if (next.length < 8) return { error: "Nowe hasło musi mieć co najmniej 8 znaków.", field: "next", ok: false };
+  if (next !== repeat) return { error: "Nowe hasła nie są takie same.", field: "repeat", ok: false };
 
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
@@ -75,6 +80,7 @@ export async function changePassword(_prev: PasswordState, formData: FormData): 
   if (check.error) {
     return {
       error: check.error.code === "invalid_credentials" ? "Obecne hasło jest nieprawidłowe." : message(check.error),
+      field: check.error.code === "invalid_credentials" ? "current" : null,
       ok: false,
     };
   }

@@ -28,7 +28,7 @@ colors:
   line-light: "#e9dfd3"
   text-light: "#2b241f"
   text-2-light: "#6c5f56"
-  text-3-light: "#7a6c61"
+  text-3-light: "#74665b"
   ok-light: "#23704a"
   part-light: "#c58a12"
   miss-light: "#a8352c"
@@ -185,7 +185,7 @@ Ciepła, przygaszona paleta neutralna z jednym pomarańczowym głosem akcji i cz
 - **Ciepły grafit** (`card`): karta bieżącej pory, okrągłe przyciski nagłówka, bottom sheet.
 - **Przygaszony grafit** (`card-muted`): karty pozostałych pór, pusty stan, szkielety ładowania, pola w arkuszu leku, okrągłe przyciski w arkuszu.
 - **Linia** (`line`): separatory wierszy w karcie, górna krawędź paska zakładek, uchwyt arkusza.
-- **Ciepła biel** (`text`), **tekst drugi** (`text-2`), **tekst trzeci** (`text-3`): treść, metadane i rozbicie dawki, ikony nieaktywne i dni spoza miesiąca. `text` służy też jako odwrócone tło tostu, banera offline i wybranego dnia w kalendarzu oraz jako kolor obrysu fokusu.
+- **Ciepła biel** (`text`), **tekst drugi** (`text-2`), **tekst trzeci** (`text-3`): treść, metadane i rozbicie dawki, ikony nieaktywne, podpowiedzi w polach i dni spoza miesiąca. `text-3` ma co najmniej 4.5:1 także na `card-muted` (tło pól), w obu motywach. `text` służy też jako odwrócone tło tostu, banera offline i wybranego dnia w kalendarzu oraz jako kolor obrysu fokusu.
 
 ### Named Rules
 **The Press-Only Orange Rule.** Pomarańcz pojawia się tylko na elemencie, który można nacisnąć, albo na wypełnionym checkboxie dawki. Nigdy na tekście informacyjnym, ikonie stanu, tle karty ani ozdobie.

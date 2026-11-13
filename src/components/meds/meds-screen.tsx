@@ -9,6 +9,7 @@ import { shortDate } from "@/lib/dates";
 import { forecastMedication, type MedForecast } from "@/lib/domain/forecast";
 import { currentDosing } from "@/lib/domain/summary";
 import type { AppData, DateKey, Medication } from "@/lib/domain/types";
+import { primaryPill } from "@/components/ui/buttons";
 
 export function MedsScreen() {
   const { data, today, loadError, reload } = useStore();
@@ -63,7 +64,7 @@ export function MedsScreen() {
 }
 
 function MedRow({ med, data, today, archived }: { med: Medication; data: AppData; today: DateKey; archived?: boolean }) {
-  const forecast = archived ? null : forecastMedication(data, med, today);
+  const forecast = useMemo(() => (archived ? null : forecastMedication(data, med, today)), [archived, data, med, today]);
   return (
     <li>
       <Link href={`/leki/${med.id}`} className="flex min-h-[4.25rem] items-center gap-3 px-5 py-3 active:bg-card-muted">
@@ -108,7 +109,7 @@ function EmptyMeds({ hasArchived }: { hasArchived: boolean }) {
       </p>
       <Link
         href="/leki/nowy"
-        className="mt-5 flex h-12 items-center gap-2 rounded-full bg-action px-6 text-body font-semibold text-on-action active:bg-action-press"
+        className={`mt-5 ${primaryPill}`}
       >
         <Plus aria-hidden className="size-5" />
         Dodaj lek

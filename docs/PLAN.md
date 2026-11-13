@@ -1,6 +1,6 @@
 # Leki – plan dalszej implementacji
 
-> Stan na 2026-11-12. Specyfikacja: [PROJEKT.md](PROJEKT.md). System wizualny: [../DESIGN.md](../DESIGN.md).
+> Stan na 2026-11-13. Specyfikacja: [PROJEKT.md](PROJEKT.md). System wizualny: [../DESIGN.md](../DESIGN.md).
 > Kolejność kroków wynika z zależności. Krok oznaczony **⟵** wymaga ukończenia wskazanego wcześniejszego kroku.
 
 ---
@@ -171,14 +171,25 @@ Migracje w `supabase/migrations/` (Supabase CLI), zgodnie z PROJEKT.md §6.
 
 - [x] Testy jednostkowe logiki domenowej (Vitest): `buildChecklist`, `dayMode`, `dayStatus`, `forecastMedication` (w tym zmiana dawki w przyszłym okresie i dawki odhaczone dziś), `formatQuantity` i odmiana „lek/leki/leków” (`src/lib/domain/__tests__/`, także podsumowania okresów, `parseNumber`, zmiana czasu i granice miesięcy).
 - [x] Testy funkcji SQL: strażnik daty, ruchy stanu przy odhaczeniu i cofnięciu, RLS (użytkownik A nie widzi danych B) (`supabase/tests/db.test.ts`; także ochrona historii, nakładanie okresów, korekta stanu, uprawnienia `anon` i `service_role`).
-- [ ] Wgrać migrację `20261113000000_restrict_errors.sql`.
+- [x] Wgrać migrację `20261113000000_restrict_errors.sql` (sprawdzone 2026-11-13).
 - [x] Skalowanie formularzy na szerokościach iPhone'a i przy „Większym tekście” (patrz wyżej).
-- [ ] Sprawdzenie na prawdziwym iPhonie:
+- [x] Sprawdzenie na prawdziwym iPhonie (2026-11-13):
   - krój SF Pro Rounded w tytułach i nazwach leków (zrzuty z Windows pokazują zamiennik),
   - „Większy tekst” w iOS (Dynamic Type),
   - VoiceOver na checkboxach i w trybie edycji,
   - przeciąganie palcem w trybie edycji.
-- [ ] `/impeccable audit` dla każdego nowego ekranu przed oddaniem.
+- [x] `/impeccable audit` dla każdego nowego ekranu przed oddaniem (2026-11-13; szczegóły niżej).
+
+> **Audyt (2026-11-13):** Leki, kreator, Zapasy, Ustawienia, logowanie; detektor impeccable na kodzie i na wyrenderowanych stronach (393 px, oba motywy) + przegląd kodu. Wyniki przed poprawkami: Leki 16/20, Kreator 18, Zapasy 16, Ustawienia 17, Logowanie 19; 0 × P0, 1 × P1, 3 × P2.
+> Poprawione:
+> - **[P1]** `text-3` w jasnym motywie `#7a6c61` → `#74665b`: podpowiedzi w polach i daty minionych okresów miały 4,3:1 na `card-muted`, teraz 4,73:1 (WCAG AA). DESIGN.md zaktualizowany.
+> - **[P2]** Arkusze (wspólny `Sheet`) mają przycisk „Zamknij” (✕ obok uchwytu, 44 pt); wcześniej tylko gest i stuknięcie w tło, co z VoiceOverem nie zawsze działa.
+> - **[P2]** Zmiana hasła: błąd wskazuje pole (`aria-invalid` + `aria-describedby`) i jest ogłaszany od razu (`role="alert"`); osobne komunikaty dla pustego obecnego i pustego nowego hasła.
+> - **[P3]** Prognoza zapasu w `useMemo` (lista leków, szczegóły, arkusz zapasu; w arkuszu liczyła się przy każdym wpisanym znaku).
+> - **[P3]** `text-wrap: pretty` dla `p` i `li` (bez pojedynczego słowa w ostatniej linii).
+> - Klasy przycisków w `src/components/ui/buttons.ts` (bez `"use client"`, bo potrzebne też w komponentach serwerowych); doszły `primaryPill` i `outlinePill`. Logowanie, puste stany, „Spróbuj ponownie” i „Wyloguj się” używają wspólnych stylów (wcześniej powielone, część bez wciśnięcia, „Wyloguj się” z prawie niewidocznym obrysem).
+> Po poprawkach: detektor na wszystkich ekranach w obu motywach zgłasza tylko `cream-palette` (kremowe tło jasnego motywu, świadoma decyzja w DESIGN.md, fałszywy alarm); test układu 17/23/28 px bez zmian względem wcześniejszego (tylko 320 px przy AX1).
+> `.impeccable/design.json` jest starszy niż DESIGN.md (hook impeccable): odświeżyć przez `/impeccable document`, gdy będzie potrzebny.
 
 ---
 

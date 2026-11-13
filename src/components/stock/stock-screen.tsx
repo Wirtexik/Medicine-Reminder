@@ -11,6 +11,7 @@ import { forecastMedication, type MedForecast } from "@/lib/domain/forecast";
 import { packageName, packageSizeLabel } from "@/lib/domain/forms";
 import { forecastText, StockForecastLine } from "./stock-forecast";
 import { StockSheet, type StockTarget } from "./stock-sheet";
+import { primaryPill } from "@/components/ui/buttons";
 
 /** Najpilniejsze najpierw; leki bez końca zapasu na końcu, alfabetycznie. */
 function byUrgency(a: MedForecast, b: MedForecast): number {
@@ -149,7 +150,7 @@ function EmptyStock() {
       </p>
       <Link
         href="/leki/nowy"
-        className="mt-5 flex h-12 items-center gap-2 rounded-full bg-action px-6 text-body font-semibold text-on-action active:bg-action-press"
+        className={`mt-5 ${primaryPill}`}
       >
         <Plus aria-hidden className="size-5" />
         Dodaj lek

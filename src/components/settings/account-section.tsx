@@ -5,6 +5,7 @@ import { signOut } from "@/lib/auth/actions";
 import { emailToUsername } from "@/lib/auth/username";
 import { createClient } from "@/lib/supabase/server";
 import { PasswordForm } from "./password-form";
+import { outlinePill } from "@/components/ui/buttons";
 
 const card = "rounded-[var(--radius-card)] bg-card px-5 py-5 shadow-[var(--shadow)]";
 
@@ -27,7 +28,7 @@ export async function AccountSection() {
         <form action={signOut}>
           <button
             type="submit"
-            className="mt-4 flex h-12 items-center gap-2 rounded-full border-[1.5px] border-line px-5 text-meta font-semibold"
+            className={`mt-4 ${outlinePill}`}
           >
             <LogOut aria-hidden className="size-4" />
             Wyloguj się

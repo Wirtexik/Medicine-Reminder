@@ -13,6 +13,7 @@ import { DayHeader } from "./day-header";
 import { MedSheet } from "./med-sheet";
 import { SlotCard } from "./slot-card";
 import { StockAlert } from "./stock-alert";
+import { primaryPill } from "@/components/ui/buttons";
 
 const SAVE_FAILED = "Nie udało się zapisać. Sprawdź połączenie i spróbuj ponownie.";
 
@@ -154,7 +155,7 @@ function LoadError({ onRetry }: { onRetry: () => void }) {
         <button
           type="button"
           onClick={onRetry}
-          className="mt-5 flex h-12 items-center rounded-full bg-action px-6 text-body font-semibold text-on-action active:bg-action-press"
+          className={`mt-5 ${primaryPill}`}
         >
           Spróbuj ponownie
         </button>

@@ -4,20 +4,12 @@ import { Check, ChevronDown, ChevronLeft, Minus, Plus } from "lucide-react";
 import Link from "next/link";
 import { useId } from "react";
 import { formatQuantity } from "@/lib/domain/format";
+import { roundButton } from "./buttons";
 import { fieldClass } from "./text-field";
 
 /* Wspólne elementy formularzy ekranu „Leki”, w języku DESIGN.md. */
 
-export const primaryButton =
-  "flex h-[3.25rem] w-full items-center justify-center gap-2 rounded-full bg-action px-5 text-body font-semibold text-on-action transition-transform duration-150 active:scale-[0.98] active:bg-action-press disabled:opacity-40";
-
-export const outlineButton =
-  "flex h-12 w-full items-center justify-center gap-2 rounded-full border-[1.5px] border-[color-mix(in_srgb,var(--text)_24%,transparent)] px-5 text-meta font-semibold text-text transition-transform duration-150 active:scale-[0.98] disabled:opacity-40";
-
-export const roundButton =
-  "grid size-11 shrink-0 place-items-center rounded-full bg-card-muted text-text transition-transform duration-150 active:scale-90 disabled:opacity-40";
-
-export const cardClass = "rounded-[var(--radius-card)] bg-card";
+export { cardClass, outlineButton, outlinePill, primaryButton, primaryPill, roundButton } from "./buttons";
 
 /** Pasek nad tytułem: powrót po lewej, opcjonalna akcja po prawej. */
 export function BackBar({ href, label, children }: { href: string; label: string; children?: React.ReactNode }) {

@@ -1,4 +1,5 @@
 import { CloudOff } from "lucide-react";
+import { primaryPill } from "@/components/ui/buttons";
 
 /** Szkielet albo błąd pierwszego wczytania danych (ekrany poza „Dziś”). */
 export function LoadState({ error, onRetry }: { error: boolean; onRetry: () => void }) {
@@ -12,7 +13,7 @@ export function LoadState({ error, onRetry }: { error: boolean; onRetry: () => v
         <button
           type="button"
           onClick={onRetry}
-          className="mt-5 flex h-12 items-center rounded-full bg-action px-6 text-body font-semibold text-on-action active:bg-action-press"
+          className={`mt-5 ${primaryPill}`}
         >
           Spróbuj ponownie
         </button>

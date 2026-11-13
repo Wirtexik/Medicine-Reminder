@@ -3,7 +3,7 @@
 import { Archive, ArchiveRestore, CalendarPlus, ChevronRight, Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { LoadState } from "@/components/app-shell/load-state";
 import { BackBar, FormError, outlineButton, SectionTitle } from "@/components/ui/controls";
 import { deleteMedication, updateMedication } from "@/lib/data/meds";
@@ -53,7 +53,7 @@ function MedDetail({ med, data, today, onDeleted }: { med: Medication; data: App
   const [showPast, setShowPast] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const forecast = forecastMedication(data, med, today);
+  const forecast = useMemo(() => forecastMedication(data, med, today), [data, med, today]);
   const threshold = med.lowStockDays ?? data.defaultLowStockDays;
 
   const periods = [...med.periods].sort((a, b) => a.validFrom.localeCompare(b.validFrom));

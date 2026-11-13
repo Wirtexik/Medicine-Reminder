@@ -17,7 +17,7 @@
   --line: #e9dfd3;
   --text: #2b241f;
   --text-2: #6c5f56;
-  --text-3: #7a6c61;
+  --text-3: #74665b; /* ≥ 4.5:1 także na card-muted (placeholdery) */
   --action: #ff7a45;
   --action-press: #f26a33;
   --on-action: #241a14;
@@ -134,6 +134,12 @@ body {
 :focus-visible {
   outline: 2.5px solid var(--focus);
   outline-offset: 2px;
+}
+
+/* Bez pojedynczego słowa w ostatniej linii podpowiedzi i opisów. */
+p,
+li {
+  text-wrap: pretty;
 }
 
 /* Domyślnie fieldset ma min-inline-size: min-content i rośnie razem z treścią,
